@@ -1,0 +1,95 @@
+---
+title: "Men vs Women"
+---
+
+```{r}
+#| include: false
+source("R/data-prep.R")
+```
+
+## Two events, one Olympic stage
+
+Beach volleyball has featured men's and women's tournaments at every Games since its 1996 debut. Participation below is measured in athlete-event records—two records for each competing pair—while medal bars count podium teams once.
+
+### Participation through the years
+
+```{r}
+#| echo: false
+#| fig-height: 5
+#| fig-cap: "Beach volleyball athlete-event records by gender and Summer Games."
+
+ggplot(
+  beach_participation_by_year,
+  aes(x = year, y = athlete_event_records, color = gender, group = gender)
+) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2.4) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  scale_x_continuous(breaks = sort(unique(beach_participation_by_year$year))) +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(
+    x = NULL,
+    y = "Athlete-event records",
+    color = "Event",
+    caption = "Source: olympicAthletes::olympic_athletes; beach volleyball identified from the event field."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    plot.caption = element_text(color = "#637780", hjust = 0)
+  )
+```
+
+Recorded participation begins lower for women at the sport's debut: 36 athlete-event rows versus 48 for men in 1996. From 2000 through 2024, both events have 48 rows per Games in this dataset; these are athlete-event counts, not audience or popularity measures.
+
+### Who reached the podium?
+
+```{r}
+#| echo: false
+#| fig-width: 13
+#| fig-height: 7
+#| fig-cap: "Each point is one medal-winning country-team. Panels compare men's and women's results by Olympic year; hover for details."
+
+gender_medal_chart <- beach_medals |>
+  mutate(
+    country = factor(country, levels = rev(country_medal_totals$country)),
+    year = factor(year, levels = sort(unique(year)))
+  ) |>
+  ggplot(
+    aes(
+      x = year,
+      y = country,
+      color = medal,
+      text = paste(country, gender, year, medal, "team medal")
+    )
+  ) +
+  geom_point(
+    position = position_dodge(width = 0.65),
+    size = 2.8
+  ) +
+  facet_wrap(~gender, ncol = 2) +
+  scale_color_manual(
+    values = c(Gold = "#c99837", Silver = "#9caab5", Bronze = "#b87950"),
+    breaks = c("Gold", "Silver", "Bronze")
+  ) +
+  labs(
+    x = "Olympic year",
+    y = "Medal-winning country",
+    color = "Medal",
+    caption = "Medals count country-teams, not athletes. 2020 and 2024 podiums use official Olympic results."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    strip.text = element_text(face = "bold", color = "#10384a"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(color = "#637780", hjust = 0)
+  )
+
+plotly::ggplotly(gender_medal_chart, tooltip = "text")
+```
+
+Across eight editions, each event awards 24 team medals. Brazil leads both tallies (8 women's and 6 men's medals), while the United States has 7 women's and 4 men's; Australia's three medals are all in the women's event.
