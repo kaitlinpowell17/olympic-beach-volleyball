@@ -5,6 +5,35 @@ title: "Olympic Beach Volleyball: Road to Gold"
 ```{r}
 #| include: false
 source("R/data-prep.R")
+
+summer_volleyball <- summer_athletes |>
+  filter(sport == "Volleyball")
+
+volleyball_age_records <- summer_volleyball |>
+  filter(!is.na(age)) |>
+  mutate(
+    competition = factor(
+      if_else(
+        str_detect(event, beach_event),
+        "Beach volleyball",
+        "Indoor volleyball"
+      ),
+      levels = c("Indoor volleyball", "Beach volleyball")
+    ),
+    gender = recode(sex, M = "Men", F = "Women"),
+    medal_label = coalesce(as.character(medal), "No medal"),
+    hover_text = paste0(
+      "<b>", name, "</b>",
+      "<br>", team,
+      "<br>Olympic year: ", year,
+      "<br>", competition, " · ", gender,
+      "<br>Age: ", age,
+      "<br>Medal: ", medal_label
+    )
+  )
+
+beach_plot_count <- sum(volleyball_age_records$competition == "Beach volleyball")
+indoor_plot_count <- sum(volleyball_age_records$competition == "Indoor volleyball")
 ```
 
 <div class="hero">
@@ -14,27 +43,99 @@ source("R/data-prep.R")
   <a class="hero-link" href="explore.qmd">Explore the data <span aria-hidden="true">→</span></a>
 </div>
 
+## One point per Olympic volleyball athlete-event
+
+Age at each Games, 1964–2024. The indoor records provide a longer Olympic history for context: indoor volleyball debuted in 1964, while beach volleyball joined in 1996. Hover for athlete, team, sex, and medal details. Slight jitter separates overlapping age-and-year values; it changes display position only.
+
 ::: {.stats-grid}
 ::: {.stat-card}
-<span class="stat-value">`r scales::comma(source_records)`</span>
-<span class="stat-label">athlete-event records in the source</span>
+<span class="stat-value">`r scales::comma(nrow(volleyball_age_records))`</span>
+<span class="stat-label">real athlete-event observations plotted</span>
 :::
 
 ::: {.stat-card}
-<span class="stat-value">`r scales::comma(summer_records_used)`</span>
-<span class="stat-label">Summer Games records used in the chart</span>
+<span class="stat-value">`r scales::comma(beach_plot_count)`</span>
+<span class="stat-label">beach volleyball observations</span>
 :::
 
 ::: {.stat-card}
-<span class="stat-value">`r scales::comma(nrow(beach_athletes))`</span>
-<span class="stat-label">beach volleyball athlete-event records, 1996–2024</span>
+<span class="stat-value">`r scales::comma(indoor_plot_count)`</span>
+<span class="stat-label">indoor volleyball observations</span>
 :::
 :::
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-cap: "Source: olympicAthletes::olympic_athletes. Each point is one age-reported Summer Olympic Volleyball athlete-event record (4,783 of 4,792); gold highlights all 756 beach volleyball records from 1996–2024."
+
+volleyball_chart <- ggplot(
+  volleyball_age_records,
+  aes(
+    x = age,
+    y = year,
+    color = competition,
+    alpha = competition,
+    size = competition,
+    text = hover_text
+  )
+) +
+  geom_jitter(width = 0.12, height = 0.12) +
+  scale_color_manual(
+    values = c(
+      "Indoor volleyball" = "#829ca8",
+      "Beach volleyball" = "#b87912"
+    )
+  ) +
+  scale_alpha_manual(
+    values = c(
+      "Indoor volleyball" = 0.22,
+      "Beach volleyball" = 0.9
+    ),
+    guide = "none"
+  ) +
+  scale_size_manual(
+    values = c(
+      "Indoor volleyball" = 1.15,
+      "Beach volleyball" = 1.8
+    ),
+    guide = "none"
+  ) +
+  scale_x_continuous(breaks = scales::breaks_width(5)) +
+  scale_y_continuous(breaks = seq(1964, 2024, by = 8)) +
+  labs(
+    x = "Athlete age (years)",
+    y = "Olympic year",
+    color = "Volleyball event"
+  ) +
+  guides(alpha = "none", size = "none") +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "#e6e1d8"),
+    axis.title = element_text(color = "#355260"),
+    legend.position = "top"
+  )
+
+plotly::ggplotly(volleyball_chart, tooltip = "text", height = 650) |>
+  plotly::layout(
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.18,
+      yanchor = "top"
+    ),
+    margin = list(t = 20, b = 75)
+  )
+```
 
 ::: {.callout-note}
-## What counts as a record?
+## What the data can—and cannot—show
 
-One row represents one athlete at one Games edition in one event—not one unique person or one team. The source has **`r scales::comma(source_records)`** rows; the chart aggregates the **`r scales::comma(summer_records_used)`** Summer Games rows. Beach volleyball is filtered from `event` within the Volleyball sport, rather than treating all Volleyball entries as beach volleyball.
+The source documentation defines each row as one athlete's participation in a Games and event; the records have athlete IDs and do not include coaches or other staff. This chart includes Summer Volleyball records with reported age. Of **`r scales::comma(nrow(summer_volleyball))`** such event records from 1964–2024, **`r scales::comma(beach_plot_count)`** are beach volleyball across eight Games (84 in 1996 and 96 per edition from 2000 through 2024), and **`r scales::comma(indoor_plot_count)`** are indoor volleyball. Nine Volleyball records have no age and are not plotted.
+
+The beach-only subset is too small to supply thousands of distinct observations. Indoor volleyball is included as historical context for the longer Olympic timeline, while its smaller, muted markers keep beach volleyball prominent. The chart shows every age-reported Volleyball record once; a beach-specific graphic with thousands of points would need an additional rally-by-rally dataset, such as official FIVB/Volleyball World DataVolley records for Olympic beach matches.
 :::
 
 Continue to [Olympic Trends](olympic-trends.qmd) to compare participation across Summer Games.

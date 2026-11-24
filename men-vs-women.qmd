@@ -5,18 +5,86 @@ title: "Men vs Women"
 ```{r}
 #| include: false
 source("R/data-prep.R")
+
+athlete_profiles <- beach_athletes |>
+  filter(!is.na(age), !is.na(height)) |>
+  mutate(
+    medal_status = case_when(
+      year >= 2020 ~ "Not reported in source",
+      is.na(medal) ~ "No medal",
+      TRUE ~ as.character(medal)
+    ),
+    hover_text = paste0(
+      "<b>", name, "</b>",
+      "<br>Year: ", year,
+      "<br>Event: ", gender,
+      "<br>Age: ", age,
+      "<br>Height: ", height, " cm",
+      "<br>Medal status: ", medal_status
+    )
+  )
 ```
 
 ## Two events, one Olympic stage
 
-Beach volleyball has featured men's and women's tournaments at every Games since its 1996 debut. Participation below is measured in athlete-event records—two records for each competing pair—while medal bars count podium teams once.
+Beach volleyball has featured men's and women's tournaments at every Games since its 1996 debut. Participation is measured in athlete-event records—two records for each competing pair—while podium results count each country-team once.
+
+### Individual athlete profiles
+
+Each point is a beach-volleyball athlete-event record. The age-height relationship is compared by event; shapes show medals only where the source records them.
+
+```{r}
+#| echo: false
+#| fig-height: 6
+#| fig-cap: "Source: olympicAthletes::olympic_athletes. Shows `r scales::comma(nrow(athlete_profiles))` of `r scales::comma(nrow(beach_athletes))` athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024."
+
+profile_chart <- ggplot(
+  athlete_profiles,
+  aes(
+    x = age,
+    y = height,
+    color = gender,
+    shape = medal_status,
+    text = hover_text
+  )
+) +
+  geom_point(size = 2.8, alpha = 0.72) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  scale_shape_manual(
+    values = c(
+      "Gold" = 17,
+      "Silver" = 15,
+      "Bronze" = 18,
+      "No medal" = 16,
+      "Not reported in source" = 4
+    )
+  ) +
+  labs(
+    x = "Age (years)",
+    y = "Height (cm)",
+    color = "Event",
+    shape = "Medal status"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(color = "#355260")
+  )
+
+plotly::ggplotly(profile_chart, tooltip = "text")
+```
+
+::: {.source-note}
+Source: `olympicAthletes::olympic_athletes`. The chart plots **`r scales::comma(nrow(athlete_profiles))`** of **`r scales::comma(nrow(beach_athletes))`** athlete-event records with reported height; records without height are omitted. Medal status is not reported by this source for 2020 or 2024.
+:::
 
 ### Participation through the years
 
 ```{r}
 #| echo: false
 #| fig-height: 5
-#| fig-cap: "Beach volleyball athlete-event records by gender and Summer Games."
+#| fig-cap: "Beach volleyball participation by event and Games year. Source: olympicAthletes::olympic_athletes; 756 athlete-event records across eight editions."
 
 ggplot(
   beach_participation_by_year,
@@ -50,7 +118,7 @@ Recorded participation begins lower for women at the sport's debut: 36 athlete-e
 #| echo: false
 #| fig-width: 13
 #| fig-height: 7
-#| fig-cap: "Each point is one medal-winning country-team. Panels compare men's and women's results by Olympic year; hover for details."
+#| fig-cap: "Each point is one of 48 medal-winning country-teams. Panels compare men's and women's results by Olympic year; 2020 and 2024 podiums use official Olympic results."
 
 gender_medal_chart <- beach_medals |>
   mutate(
@@ -91,5 +159,9 @@ gender_medal_chart <- beach_medals |>
 
 plotly::ggplotly(gender_medal_chart, tooltip = "text")
 ```
+
+::: {.source-note}
+Sources: `olympicAthletes` for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all **`r scales::comma(nrow(beach_medals))`** country-team medal results once each, not once per athlete.
+:::
 
 Across eight editions, each event awards 24 team medals. Brazil leads both tallies (8 women's and 6 men's medals), while the United States has 7 women's and 4 men's; Australia's three medals are all in the women's event.

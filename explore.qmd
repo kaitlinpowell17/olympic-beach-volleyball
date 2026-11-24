@@ -12,29 +12,44 @@ medal_timeline_shared <- crosstalk::SharedData$new(
   group = "beach-medal-timeline"
 )
 
-medal_map_years <- sort(unique(beach_medals$year))
+medal_map_teams <- beach_athletes |>
+  dplyr::filter(year <= 2016) |>
+  dplyr::group_by(year, gender, country, team, event) |>
+  dplyr::summarise(participation = dplyr::n(), .groups = "drop") |>
+  dplyr::left_join(
+    source_beach_medals |>
+      dplyr::select(year, gender, country, team, event, medal),
+    by = c("year", "gender", "country", "team", "event")
+  )
+
+medal_map_years <- sort(unique(medal_map_teams$year))
+medal_map_countries <- sort(unique(medal_map_teams$country))
 
 medal_map_counts_long <- tidyr::expand_grid(
   year_filter = c("all", as.character(medal_map_years)),
-  gender_filter = c("all", "Men", "Women")
+  gender_filter = c("all", "Men", "Women"),
+  outcome_filter = c("all", "medalists", "non_medalists")
 ) |>
   dplyr::mutate(
-    counts = purrr::map2(
-      year_filter,
-      gender_filter,
-      \(year_filter, gender_filter) {
-        beach_medals |>
+    counts = purrr::pmap(
+      list(year_filter, gender_filter, outcome_filter),
+      \(year_filter, gender_filter, outcome_filter) {
+        medal_map_teams |>
           dplyr::filter(
             if (year_filter == "all") TRUE else year == as.integer(year_filter),
-            if (gender_filter == "all") TRUE else gender == gender_filter
+            if (gender_filter == "all") TRUE else gender == gender_filter,
+            if (outcome_filter == "medalists") !is.na(medal) else
+              if (outcome_filter == "non_medalists") is.na(medal) else TRUE
           ) |>
-          dplyr::count(country, medal, name = "medal_count") |>
-          tidyr::pivot_wider(
-            names_from = medal,
-            values_from = medal_count,
-            values_fill = 0L
-          ) |>
-          dplyr::mutate(total = Gold + Silver + Bronze)
+          dplyr::group_by(country) |>
+          dplyr::summarise(
+            participation = sum(participation),
+            gold = sum(medal == "Gold", na.rm = TRUE),
+            silver = sum(medal == "Silver", na.rm = TRUE),
+            bronze = sum(medal == "Bronze", na.rm = TRUE),
+            medals = sum(!is.na(medal)),
+            .groups = "drop"
+          )
       }
     )
   ) |>
@@ -51,15 +66,17 @@ medal_map_counts_long <- tidyr::expand_grid(
     country,
     year_key,
     gender_key,
-    Gold,
-    Silver,
-    Bronze,
-    total
+    outcome_filter,
+    participation,
+    gold,
+    silver,
+    bronze,
+    medals
   ) |>
   tidyr::pivot_wider(
-    names_from = c(year_key, gender_key),
-    values_from = c(Gold, Silver, Bronze, total),
-    names_glue = "{year_key}_{gender_key}_{.value}"
+    names_from = c(year_key, gender_key, outcome_filter),
+    values_from = c(participation, gold, silver, bronze, medals),
+    names_glue = "{year_key}_{gender_key}_{outcome_filter}_{.value}"
   ) |>
   dplyr::rename_with(stringr::str_to_lower)
 
@@ -70,19 +87,21 @@ medal_map_boundaries <- rnaturalearth::ne_countries(
   dplyr::transmute(
     country_key = dplyr::case_when(
       admin == "United States of America" ~ "United States",
-      admin == "Russia" ~ "ROC",
+      admin == "United Kingdom" ~ "Great Britain",
+      admin == "Czechia" ~ "Czech Republic",
       TRUE ~ admin
     ),
     map_label = dplyr::case_when(
       admin == "United States of America" ~ "United States",
-      admin == "Russia" ~ "ROC (Russian Olympic Committee)",
+      admin == "United Kingdom" ~ "Great Britain",
+      admin == "Czechia" ~ "Czech Republic",
       TRUE ~ admin
     ),
     geometry
   )
 
 unmatched_map_countries <- setdiff(
-  unique(beach_medals$country),
+  unique(medal_map_teams$country),
   medal_map_boundaries$country_key
 )
 if (length(unmatched_map_countries) > 0) {
@@ -104,13 +123,15 @@ medal_map_world <- medal_map_boundaries |>
 medal_map_ranking <- medal_map_counts_long |>
   dplyr::transmute(
     country,
-    gold = all_all_gold,
-    silver = all_all_silver,
-    bronze = all_all_bronze,
-    total = all_all_total
+    participation = all_all_all_participation,
+    gold = all_all_all_gold,
+    silver = all_all_all_silver,
+    bronze = all_all_all_bronze,
+    medals = all_all_all_medals
   ) |>
   dplyr::arrange(
-    dplyr::desc(total),
+    dplyr::desc(participation),
+    dplyr::desc(medals),
     dplyr::desc(gold),
     dplyr::desc(silver),
     country
@@ -133,13 +154,37 @@ medal_map_filters <- htmltools::div(
   ),
   htmltools::div(
     class = "medal-map-filter",
-    htmltools::tags$label(`for` = "medal-map-gender", "Competition"),
+    htmltools::tags$label(`for` = "medal-map-gender", "Gender"),
     htmltools::tags$select(
       id = "medal-map-gender",
       class = "form-select",
       htmltools::tags$option(value = "all", "Men and women"),
       htmltools::tags$option(value = "Men", "Men"),
       htmltools::tags$option(value = "Women", "Women")
+    )
+  ),
+  htmltools::div(
+    class = "medal-map-filter",
+    htmltools::tags$label(`for` = "medal-map-country", "Country"),
+    htmltools::tags$select(
+      id = "medal-map-country",
+      class = "form-select",
+      htmltools::tags$option(value = "all", "All countries"),
+      lapply(
+        medal_map_countries,
+        \(country) htmltools::tags$option(value = country, country)
+      )
+    )
+  ),
+  htmltools::div(
+    class = "medal-map-filter",
+    htmltools::tags$label(`for` = "medal-map-outcome", "Team medal status"),
+    htmltools::tags$select(
+      id = "medal-map-outcome",
+      class = "form-select",
+      htmltools::tags$option(value = "all", "All teams"),
+      htmltools::tags$option(value = "medalists", "Medal-winning teams"),
+      htmltools::tags$option(value = "non_medalists", "Non-medalist teams")
     )
   )
 )
@@ -150,6 +195,8 @@ function(el, x) {
   var map = mapWidget.getMap();
   var yearSelect = document.getElementById("medal-map-year");
   var genderSelect = document.getElementById("medal-map-gender");
+  var countrySelect = document.getElementById("medal-map-country");
+  var outcomeSelect = document.getElementById("medal-map-outcome");
   var rankingBody = document.querySelector("#medal-country-ranking tbody");
   var featuresByCountry = {};
   var layers = [];
@@ -166,9 +213,10 @@ function(el, x) {
   }
   map.eachLayer(registerLayer);
 
-  function countFor(properties, year, gender, medal) {
+  function countFor(properties, year, gender, outcome, measure) {
     var yearKey = year === "all" ? "all" : "y" + year;
-    var key = yearKey + "_" + gender.toLowerCase() + "_" + medal;
+    var key = yearKey + "_" + gender.toLowerCase() + "_" +
+      outcome + "_" + measure;
     return Number(properties[key] || 0);
   }
 
@@ -196,30 +244,39 @@ function(el, x) {
   function update() {
     var year = yearSelect.value;
     var gender = genderSelect.value;
+    var country = countrySelect.value;
+    var outcome = outcomeSelect.value;
     var valuesByCountry = {};
     var maximum = 0;
 
     Object.keys(featuresByCountry).forEach(function(country) {
       var properties = featuresByCountry[country];
       var values = {
-        gold: countFor(properties, year, gender, "gold"),
-        silver: countFor(properties, year, gender, "silver"),
-        bronze: countFor(properties, year, gender, "bronze")
+        participation: countFor(properties, year, gender, outcome, "participation"),
+        gold: countFor(properties, year, gender, outcome, "gold"),
+        silver: countFor(properties, year, gender, outcome, "silver"),
+        bronze: countFor(properties, year, gender, outcome, "bronze"),
+        medals: countFor(properties, year, gender, outcome, "medals")
       };
-      values.total = values.gold + values.silver + values.bronze;
       valuesByCountry[country] = values;
-      maximum = Math.max(maximum, values.total);
+      maximum = Math.max(maximum, values.participation);
     });
 
     layers.forEach(function(layer) {
       var properties = layer.feature.properties;
-      var values = valuesByCountry[properties.country_key];
+      var selected = country === "all" || properties.country_key === country;
+      var values = valuesByCountry[properties.country_key] ||
+        {participation: 0, gold: 0, silver: 0, bronze: 0, medals: 0};
       var tooltip = "<strong>" + properties.map_label + "</strong>" +
+        "<br>Athlete-event records: " + values.participation +
         "<br>Gold: " + values.gold +
         "<br>Silver: " + values.silver +
         "<br>Bronze: " + values.bronze +
-        "<br><strong>Total: " + values.total + "</strong>";
-      layer.setStyle({fillColor: fillFor(values.total, maximum)});
+        "<br><strong>Team medals: " + values.medals + "</strong>";
+      layer.setStyle({
+        fillColor: selected ? fillFor(values.participation, maximum) : "#f0eee8",
+        fillOpacity: selected ? 0.95 : 0.25
+      });
       if (layer.getTooltip()) {
         layer.setTooltipContent(tooltip);
       } else {
@@ -232,19 +289,22 @@ function(el, x) {
     var rows = Array.prototype.slice.call(rankingBody.querySelectorAll("tr"));
     rows.forEach(function(row) {
       var values = valuesByCountry[row.getAttribute("data-country")] ||
-        {gold: 0, silver: 0, bronze: 0, total: 0};
+        {participation: 0, gold: 0, silver: 0, bronze: 0, medals: 0};
       row.querySelector(".rank-position").textContent = "";
+      row.querySelector(".participation-count").textContent = values.participation;
       row.querySelector(".gold-count").textContent = values.gold;
       row.querySelector(".silver-count").textContent = values.silver;
       row.querySelector(".bronze-count").textContent = values.bronze;
-      row.querySelector(".total-count").textContent = values.total;
-      row.dataset.total = values.total;
+      row.querySelector(".total-count").textContent = values.medals;
+      row.dataset.participation = values.participation;
+      row.dataset.medals = values.medals;
       row.dataset.gold = values.gold;
       row.dataset.silver = values.silver;
     });
 
     rows.sort(function(a, b) {
-      return Number(b.dataset.total) - Number(a.dataset.total) ||
+      return Number(b.dataset.participation) - Number(a.dataset.participation) ||
+        Number(b.dataset.medals) - Number(a.dataset.medals) ||
         Number(b.dataset.gold) - Number(a.dataset.gold) ||
         Number(b.dataset.silver) - Number(a.dataset.silver) ||
         a.getAttribute("data-country").localeCompare(
@@ -253,15 +313,19 @@ function(el, x) {
     });
     rows.forEach(function(row, index) {
       row.querySelector(".rank-position").textContent = index + 1;
-      row.style.display = index < 10 && Number(row.dataset.total) > 0
-        ? ""
-        : "none";
+      var visible = country === "all"
+        ? index < 10 && Number(row.dataset.participation) > 0
+        : row.getAttribute("data-country") === country &&
+          Number(row.dataset.participation) > 0;
+      row.style.display = visible ? "" : "none";
       rankingBody.appendChild(row);
     });
   }
 
   yearSelect.addEventListener("change", update);
   genderSelect.addEventListener("change", update);
+  countrySelect.addEventListener("change", update);
+  outcomeSelect.addEventListener("change", update);
   update();
 }
 )---"
@@ -269,19 +333,19 @@ function(el, x) {
 medal_map_legend <- htmltools::HTML(
   paste0(
     '<div class="medal-map-legend">',
-    '<strong>Total team medals</strong>',
+    '<strong>Athlete-event records</strong>',
     '<div class="medal-map-gradient"></div>',
     '<div class="medal-map-legend-scale"><span>1</span>',
     '<span id="medal-map-legend-max"></span></div>',
-    '<span class="medal-map-no-medals"><i></i>No medals in selection</span>',
+    '<span class="medal-map-no-medals"><i></i>No entries in selection</span>',
     "</div>"
   )
 )
 ```
 
-## Where Olympic medals meet the map
+## Where Olympic participation meets the map
 
-Explore the countries on the podium from 1996 through 2024. The map shades each country by its total team medals; hover over a country for its gold, silver, bronze, and total counts. Use the filters to compare Olympic editions and men's or women's competitions. The ranking below updates with the selected filters.
+Explore country participation from 1996 through 2016. The map shades each country by athlete-event records; hover for participation and team-medal counts. Use the filters for Olympic year, gender, country, and team medal status.
 
 ```{r}
 #| echo: false
@@ -317,11 +381,11 @@ htmltools::div(
 )
 ```
 
-**Data note:** Each medal is counted once per country-team and event, not per athlete. The source dataset has medal results through 2016; Tokyo 2020 and Paris 2024 team podiums are added from the official results linked in [Methodology](road-to-gold.qmd#methodology). The 2020 Russian Olympic Committee (ROC) result is shown on Russia's boundary for geographic placement and remains attributed to ROC in the counts.
+**Data note:** The map uses **`r scales::comma(sum(medal_map_teams$participation))`** country-identified athlete-event records from 1996–2016, representing **`r dplyr::n_distinct(medal_map_teams$country)`** countries. Of the 192 source rows from 2020 and 2024, 171 lack a country derived from the `team` field, so those editions are excluded rather than inferred. Medal totals are one team medal per pair and event, using source medals through 2016. Source: [`olympicAthletes::olympic_athletes`](https://moderndive.github.io/olympicAthletes/); boundaries: Natural Earth.
 
-## Top medal-winning countries
+## Countries by participation and medals
 
-The top 10 ranking reflects the current map filters. Select “All editions” and “Men and women” to see the all-time leaders.
+The top 10 ranking updates with the map filters. Switch the team medal status filter to compare participation from medal-winning teams with other teams.
 
 ```{r}
 #| echo: false
@@ -334,10 +398,11 @@ medal_ranking_rows <- lapply(
       `data-country` = row$country,
       htmltools::tags$td(class = "rank-position", i),
       htmltools::tags$th(scope = "row", row$country),
+      htmltools::tags$td(class = "participation-count", row$participation),
       htmltools::tags$td(class = "gold-count", row$gold),
       htmltools::tags$td(class = "silver-count", row$silver),
       htmltools::tags$td(class = "bronze-count", row$bronze),
-      htmltools::tags$td(class = "total-count", row$total)
+      htmltools::tags$td(class = "total-count", row$medals)
     )
   }
 )
@@ -349,10 +414,11 @@ htmltools::tags$table(
     htmltools::tags$tr(
       htmltools::tags$th(scope = "col", "#"),
       htmltools::tags$th(scope = "col", "Country"),
+      htmltools::tags$th(scope = "col", "Entries"),
       htmltools::tags$th(scope = "col", "Gold"),
       htmltools::tags$th(scope = "col", "Silver"),
       htmltools::tags$th(scope = "col", "Bronze"),
-      htmltools::tags$th(scope = "col", "Total")
+      htmltools::tags$th(scope = "col", "Team medals")
     )
   ),
   htmltools::tags$tbody(medal_ranking_rows)
@@ -419,6 +485,10 @@ crosstalk::bscols(
 )
 ```
 
+::: {.source-note}
+Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. The **48** medal-team results are converted to **`r scales::comma(nrow(medal_timeline))`** cumulative country/event/year values; zero-medal years are shown as zero, not as extra medal results.
+:::
+
 Each rise reflects one or more medal-winning country-teams; a pair earns one team medal rather than two athlete medals. Brazil and the United States finish highest at 14 and 11 team medals, while the country and event filters let you compare how those totals accumulated.
 
 ## What those medals are made of
@@ -448,6 +518,10 @@ plot_ly(
     margin = list(b = 110)
   )
 ```
+
+::: {.source-note}
+Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Medal-type totals combine the **48** distinct country-team podium results.
+:::
 
 Brazil's seven silvers equal the United States' seven golds, even though Brazil leads in total medals. Hover each stack to compare a country's medal mix; use the map filters above for the edition-specific view.
 

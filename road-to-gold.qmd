@@ -5,6 +5,18 @@ title: "Road to Gold"
 ```{r}
 #| include: false
 source("R/data-prep.R")
+
+medal_team_timeline <- beach_medals |>
+  mutate(
+    country = factor(country, levels = rev(country_medal_totals$country)),
+    year = factor(year, levels = sort(unique(year))),
+    hover_text = paste0(
+      "<b>", country, "</b>",
+      "<br>Event: ", gender,
+      "<br>Year: ", year,
+      "<br>Medal: ", medal
+    )
+  )
 ```
 
 ## A short history of the podium
@@ -20,7 +32,7 @@ The chart counts a medal for the **country-team pair in an event**, not for each
 ```{r}
 #| echo: false
 #| fig-height: 7
-#| fig-cap: "Beach volleyball team medals by country and medal type, 1996–2024. Hover for exact counts."
+#| fig-cap: "Country totals aggregate 48 beach-volleyball team medals across eight editions. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024."
 
 medal_leader_chart <- country_medal_type_totals |>
   mutate(country = forcats::fct_reorder(country, medal_count, .fun = sum)) |>
@@ -56,7 +68,59 @@ medal_leader_chart <- country_medal_type_totals |>
 plotly::ggplotly(medal_leader_chart, tooltip = c("y", "x", "fill"))
 ```
 
+::: {.source-note}
+Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Country and medal-type totals aggregate **`r scales::comma(nrow(beach_medals))`** team-medal results.
+:::
+
 Brazil leads the total with 14 team medals, while the United States has 11. Their medal mixes differ: Brazil's seven silvers match the U.S. seven golds, so the overall leader is not the gold-medal leader.
+
+## Where each medal was won
+
+This timeline returns to the underlying podium results: one mark per medal-winning country-team. It shows when each country's medals came and whether they were won in the men's or women's event.
+
+```{r}
+#| echo: false
+#| fig-height: 8
+#| fig-cap: "All 48 team-medal results, shown individually by country, Games year, event, and medal. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024."
+
+team_medal_timeline_chart <- ggplot(
+  medal_team_timeline,
+  aes(
+    x = year,
+    y = country,
+    color = medal,
+    text = hover_text
+  )
+) +
+  geom_point(size = 3) +
+  facet_wrap(~gender, ncol = 1) +
+  scale_color_manual(
+    values = c(Gold = "#c99837", Silver = "#9caab5", Bronze = "#b87950"),
+    breaks = c("Gold", "Silver", "Bronze")
+  ) +
+  labs(
+    x = "Olympic year",
+    y = "Medal-winning country",
+    color = "Medal"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    strip.text = element_text(face = "bold", color = "#10384a"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.text.x = element_text(color = "#355260"),
+    axis.text.y = element_text(color = "#294655")
+  )
+
+plotly::ggplotly(team_medal_timeline_chart, tooltip = "text")
+```
+
+::: {.source-note}
+Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each mark is one of the **`r scales::comma(nrow(medal_team_timeline))`** country-team medal results.
+:::
+
+The podium repeats across editions for a small group of countries, but the timeline distinguishes a one-time medal from sustained performance. Hover for the exact team, medal, year, and event.
 
 ## Methodology {#methodology}
 

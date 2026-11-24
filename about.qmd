@@ -2,18 +2,35 @@
 title: "About"
 ---
 
-## About Me
+## About Kaitlin
 
-I'm **Kaitlin Powell**, a student-athlete at New College of Florida, studying psychology and playing collegiate beach volleyball. My interest in the sport inspired this Olympic data project.
+I'm **Kaitlin Powell**, a psychology student at **New College of Florida** and a collegiate beach volleyball athlete. I created this project to bring together my passion for the sport and my interest in data science.
+
+## About the project
+
+This site explores the history, global participation, competitive performance, and evolution of Olympic beach volleyball through data analysis. It follows the sport from its Olympic debut in Atlanta in 1996 to the Paris 2024 Games.
 
 ::: {.about-links}
 - [GitHub profile](https://github.com/kaitlinpowell71)
-- [Project repository](https://github.com/kaitlinpowell71/olympic-beach-volleyball)
+- [Project repository](https://github.com/kaitlinpowell17/olympic-beach-volleyball)
 - [New College of Florida](https://www.ncf.edu/)
+- [k.powell28@ncf.edu](mailto:k.powell28@ncf.edu)
 :::
 
-**Contact email:** *[Add your email address here]*
+## Data and methods
 
-## Data Sources
+### Dataset and sources
 
-This project uses the [`olympicAthletes::olympic_athletes` dataset](https://moderndive.github.io/olympicAthletes/), which contains Olympic athlete-event records; its documented historical sources include the [Olympic history dataset](https://github.com/rgriff23/Olympic_history) and [Olympedia](https://www.olympedia.org/). The preparation script filters Summer Games records for Volleyball events identified as beach volleyball. Participation counts athlete-event rows, while medal results through 2016 are deduplicated by year, event, team, and medal so each pair earns one team medal. Tokyo 2020 and Paris 2024 team podiums are added from the [official Tokyo results](https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball) and [official Paris results](https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball).
+The primary source is [`olympicAthletes::olympic_athletes`](https://moderndive.github.io/olympicAthletes/), a dataset of **315,094 Olympic athlete-event records**. Filtering to Summer Games Volleyball events identified as beach volleyball gives **756 beach-volleyball athlete-event records**, covering eight editions: **1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024**.
+
+The package documents historical sources including the [Olympic history dataset](https://github.com/rgriff23/Olympic_history) and [Olympedia](https://www.olympedia.org/). For recent podiums, I use the [official Tokyo 2020 results](https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball) and [official Paris 2024 results](https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball).
+
+### Methodology
+
+I use **R** to load and prepare the data: filter to Summer Games, Volleyball, and beach-volleyball events; count participation as athlete-event rows; and standardize country labels from team identifiers for country-level comparisons. For medal analysis, I count each country-team's result once per Games, event, and medal rather than counting both athletes on a pair as separate medals. Because medal labels are unavailable in the package for 2020 and 2024, I add those podiums from the official results above.
+
+I build the visualizations with **ggplot2**, **Plotly**, and **Leaflet**, and use **Quarto** to render the interactive website.
+
+## Data limitations
+
+An athlete-event row is not a unique person: athletes who compete in multiple Games appear in multiple rows. The source also has incomplete country/team identifiers for recent editions: **171 of its 192 beach-volleyball records from 2020 and 2024 lack a country derived from the team field**. For that reason, the country participation map is limited to 1996–2016 rather than assigning countries to records with missing identifiers. The 2020 and 2024 podiums are included only where official results support team-medal counts. Some athlete characteristics, including height, are also missing for a portion of records.

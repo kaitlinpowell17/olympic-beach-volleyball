@@ -6,70 +6,84 @@ title: "Olympic Trends"
 #| include: false
 source("R/data-prep.R")
 
-medal_timeline_heatmap_data <- medals_by_year_country_total |>
+medal_timeline_data <- beach_medals |>
   mutate(
     year = factor(year, levels = sort(unique(year))),
     country = factor(country, levels = rev(country_medal_totals$country)),
     hover_text = paste0(
       country,
+      "<br>Event: ", gender,
       "<br>Olympic year: ", year,
-      "<br>Gold: ", gold,
-      "<br>Silver: ", silver,
-      "<br>Bronze: ", bronze,
-      "<br>Total team medals: ", team_medals
+      "<br>Medal: ", medal
+    )
+  )
+
+beach_age_records <- beach_athletes |>
+  mutate(
+    country = coalesce(country, "Country unavailable in source"),
+    hover_text = paste0(
+      "<b>", name, "</b>",
+      "<br>Olympic year: ", year,
+      "<br>Event: ", gender,
+      "<br>Age: ", age,
+      "<br>Country: ", country
     )
   )
 ```
 
-## A medal timeline across eight Games
+## Every team medal, from Atlanta to Paris
 
-Each tile shows a country's total team medals in that Olympic year, combining men's and women's podiums. Hover over a tile to see the gold, silver, and bronze breakdown.
+Each point is one medal-winning country-team. Compare the men's and women's podiums across all eight Games; hover for the country, team, year, and medal.
 
 ```{r}
 #| echo: false
-#| fig-height: 7
-#| fig-cap: "Beach volleyball team medals by country and Olympic year, 1996–2024. Hover for medal-type counts."
+#| fig-height: 8
+#| fig-cap: "All 48 beach-volleyball team medals, one point per podium team. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024."
 
 medal_timeline_chart <- ggplot(
-  medal_timeline_heatmap_data,
+  medal_timeline_data,
   aes(
     x = year,
     y = country,
-    fill = team_medals,
+    color = medal,
+    shape = gender,
     text = hover_text
   )
 ) +
-  geom_tile(color = "white", linewidth = 0.4) +
-  scale_fill_gradient(
-    low = "#e8f1f2",
-    high = "#10384a",
-    breaks = seq(
-      min(medal_timeline_heatmap_data$team_medals),
-      max(medal_timeline_heatmap_data$team_medals)
-    ),
-    limits = range(medal_timeline_heatmap_data$team_medals)
+  geom_point(
+    position = position_dodge(width = 0.55),
+    size = 3
+  ) +
+  facet_wrap(~gender, ncol = 1) +
+  scale_color_manual(
+    values = c(Gold = "#c99837", Silver = "#9caab5", Bronze = "#b87950"),
+    breaks = c("Gold", "Silver", "Bronze")
   ) +
   labs(
     x = "Olympic year",
     y = "Medal-winning country",
-    fill = "Team medals",
-    caption = paste(
-      "Each tile aggregates medal-winning country-teams across both events.",
-      "Sources: olympicAthletes through 2016; official Olympic results for 2020 and 2024."
-    )
+    color = "Medal",
+    shape = "Event"
   ) +
   theme_minimal(base_size = 12) +
   theme(
-    panel.grid = element_blank(),
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
     axis.text.x = element_text(color = "#355260"),
     axis.text.y = element_text(color = "#294655"),
+    strip.text = element_text(face = "bold", color = "#10384a"),
     plot.caption = element_text(color = "#637780", hjust = 0)
   )
 
 plotly::ggplotly(medal_timeline_chart, tooltip = "text")
 ```
 
-Darker tiles mark editions when a country won more medals; hover reveals whether those totals came from gold, silver, or bronze. Of the 36 country-Games with at least one medal, 25 contain one medal, 10 contain two, and one contains all three.
+::: {.source-note}
+Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each point is one of the **`r scales::comma(nrow(beach_medals))`** team-medal results.
+:::
+
+There are only 48 distinct Olympic beach-volleyball team medals across eight editions, so every podium team is shown instead of expanding medal totals into extra points.
 
 ## One Olympic timeline, three lenses
 
@@ -120,6 +134,52 @@ ggplot(
 ```
 
 Because each panel has its own vertical scale, compare the shape of the trends rather than their heights across panels. Beach volleyball entries first appear in 1996 (84 athlete-event rows) and reach 96 in 2000, where they remain through 2024.
+
+## Athlete ages across the Games
+
+These points show individual beach-volleyball athlete-event records, not yearly averages. The spread reveals the age range within each event and how it changes across editions.
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-cap: "Each point is one of 756 beach-volleyball athlete-event records from 1996–2024. Source: olympicAthletes::olympic_athletes."
+
+age_timeline_chart <- ggplot(
+  beach_age_records,
+  aes(
+    x = age,
+    y = year,
+    color = gender,
+    text = hover_text
+  )
+) +
+  geom_point(size = 2.2, alpha = 0.62) +
+  facet_wrap(~gender, ncol = 1) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  scale_x_continuous(breaks = scales::breaks_width(5)) +
+  scale_y_continuous(breaks = sort(unique(beach_age_records$year))) +
+  labs(
+    x = "Athlete age (years)",
+    y = "Olympic year",
+    color = "Event"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold", color = "#10384a"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.title = element_text(color = "#355260")
+  )
+
+plotly::ggplotly(age_timeline_chart, tooltip = "text")
+```
+
+::: {.source-note}
+Source: `olympicAthletes::olympic_athletes`; **`r scales::comma(nrow(beach_age_records))`** athlete-event rows from 1996–2024. Age is present for every beach-volleyball record in this source.
+:::
+
+Because each marker is a real athlete-event record, repeated appearances by the same athlete in different editions remain separate rows and are not synthetic extra observations.
 
 ::: {.callout-note}
 ## What counts as a record?
