@@ -1,96 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Olympic Beach Volleyball: Road to Gold",
-    "section": "",
-    "text": "Atlanta 1996 — Paris 2024\n\n\n\nFollow beach volleyball from its Olympic debut to a new generation of champions. This story uses athlete-event records to put the sport in the wider Olympic picture—and team results to trace every medal.\n\nExplore the data →"
-  },
-  {
-    "objectID": "index.html#one-point-per-olympic-volleyball-athlete-event",
-    "href": "index.html#one-point-per-olympic-volleyball-athlete-event",
-    "title": "Olympic Beach Volleyball: Road to Gold",
-    "section": "One point per Olympic volleyball athlete-event",
-    "text": "One point per Olympic volleyball athlete-event\nAge at each Games, 1964–2024. The indoor records provide a longer Olympic history for context: indoor volleyball debuted in 1964, while beach volleyball joined in 1996. Hover for athlete, team, sex, and medal details. Slight jitter separates overlapping age-and-year values; it changes display position only.\n\n\n4,783 real athlete-event observations plotted\n\n\n756 beach volleyball observations\n\n\n4,027 indoor volleyball observations\n\n\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Each point is one age-reported Summer Olympic Volleyball athlete-event record (4,783 of 4,792); gold highlights all 756 beach volleyball records from 1996–2024.\n\n\n\n\n\n\n\n\nNoteWhat the data can—and cannot—show\n\n\n\nThe source documentation defines each row as one athlete’s participation in a Games and event; the records have athlete IDs and do not include coaches or other staff. This chart includes Summer Volleyball records with reported age. Of 4,792 such event records from 1964–2024, 756 are beach volleyball across eight Games (84 in 1996 and 96 per edition from 2000 through 2024), and 4,027 are indoor volleyball. Nine Volleyball records have no age and are not plotted.\nThe beach-only subset is too small to supply thousands of distinct observations. Indoor volleyball is included as historical context for the longer Olympic timeline, while its smaller, muted markers keep beach volleyball prominent. The chart shows every age-reported Volleyball record once; a beach-specific graphic with thousands of points would need an additional rally-by-rally dataset, such as official FIVB/Volleyball World DataVolley records for Olympic beach matches.\n\n\nContinue to Olympic Trends to compare participation across Summer Games.\nSources: olympicAthletes package and data documentation. See methodology and results sources for team-medal counting and the recent podium supplement."
-  },
-  {
-    "objectID": "olympic-trends.html",
-    "href": "olympic-trends.html",
-    "title": "Olympic Trends",
-    "section": "",
-    "text": "Each point is one medal-winning country-team. Compare the men’s and women’s podiums across all eight Games; hover for the country, team, year, and medal.\n\n\n\n\nAll 48 beach-volleyball team medals, one point per podium team. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each point is one of the 48 team-medal results.\n\nThere are only 48 distinct Olympic beach-volleyball team medals across eight editions, so every podium team is shown instead of expanding medal totals into extra points."
-  },
-  {
-    "objectID": "olympic-trends.html#every-team-medal-from-atlanta-to-paris",
-    "href": "olympic-trends.html#every-team-medal-from-atlanta-to-paris",
-    "title": "Olympic Trends",
-    "section": "",
-    "text": "Each point is one medal-winning country-team. Compare the men’s and women’s podiums across all eight Games; hover for the country, team, year, and medal.\n\n\n\n\nAll 48 beach-volleyball team medals, one point per podium team. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each point is one of the 48 team-medal results.\n\nThere are only 48 distinct Olympic beach-volleyball team medals across eight editions, so every podium team is shown instead of expanding medal totals into extra points."
-  },
-  {
-    "objectID": "olympic-trends.html#one-olympic-timeline-three-lenses",
-    "href": "olympic-trends.html#one-olympic-timeline-three-lenses",
-    "title": "Olympic Trends",
-    "section": "One Olympic timeline, three lenses",
-    "text": "One Olympic timeline, three lenses\nThe broadest view follows every Summer Olympic athlete-event entry. The gold trace then zooms in: first on all indoor and beach Volleyball entries, then on beach volleyball alone, identified from the event field. Each panel has its own vertical scale so the specialist event remains visible.\n\n\n\n\n\nAthlete-event entries at Summer Olympic Games. Panels use separate vertical scales.\n\n\n\n\nBecause each panel has its own vertical scale, compare the shape of the trends rather than their heights across panels. Beach volleyball entries first appear in 1996 (84 athlete-event rows) and reach 96 in 2000, where they remain through 2024."
-  },
-  {
-    "objectID": "olympic-trends.html#athlete-ages-across-the-games",
-    "href": "olympic-trends.html#athlete-ages-across-the-games",
-    "title": "Olympic Trends",
-    "section": "Athlete ages across the Games",
-    "text": "Athlete ages across the Games\nThese points show individual beach-volleyball athlete-event records, not yearly averages. The spread reveals the age range within each event and how it changes across editions.\n\n\n\n\nEach point is one of 756 beach-volleyball athlete-event records from 1996–2024. Source: olympicAthletes::olympic_athletes.\n\n\n\nSource: olympicAthletes::olympic_athletes; 756 athlete-event rows from 1996–2024. Age is present for every beach-volleyball record in this source.\n\nBecause each marker is a real athlete-event record, repeated appearances by the same athlete in different editions remain separate rows and are not synthetic extra observations.\n\n\n\n\n\n\nNoteWhat counts as a record?\n\n\n\nOne row represents one athlete at one Games edition in one event—not one unique person or one team. Beach volleyball is filtered from event within the Volleyball sport, rather than treating all Volleyball entries as beach volleyball.\n\n\nThe Men vs. Women page focuses on beach volleyball participation and podiums by event."
-  },
-  {
-    "objectID": "men-vs-women.html",
-    "href": "men-vs-women.html",
-    "title": "Men vs Women",
-    "section": "",
-    "text": "Beach volleyball has featured men’s and women’s tournaments at every Games since its 1996 debut. Participation is measured in athlete-event records—two records for each competing pair—while podium results count each country-team once.\n\n\nEach point is a beach-volleyball athlete-event record. The age-height relationship is compared by event; shapes show medals only where the source records them.\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Shows r scales::comma(nrow(athlete_profiles)) of r scales::comma(nrow(beach_athletes)) athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024.\n\n\n\nSource: olympicAthletes::olympic_athletes. The chart plots 668 of 756 athlete-event records with reported height; records without height are omitted. Medal status is not reported by this source for 2020 or 2024.\n\n\n\n\n\n\n\n\n\nBeach volleyball participation by event and Games year. Source: olympicAthletes::olympic_athletes; 756 athlete-event records across eight editions.\n\n\n\n\nRecorded participation begins lower for women at the sport’s debut: 36 athlete-event rows versus 48 for men in 1996. From 2000 through 2024, both events have 48 rows per Games in this dataset; these are athlete-event counts, not audience or popularity measures.\n\n\n\n\n\n\n\nEach point is one of 48 medal-winning country-teams. Panels compare men’s and women’s results by Olympic year; 2020 and 2024 podiums use official Olympic results.\n\n\n\nSources: olympicAthletes for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all 48 country-team medal results once each, not once per athlete.\n\nAcross eight editions, each event awards 24 team medals. Brazil leads both tallies (8 women’s and 6 men’s medals), while the United States has 7 women’s and 4 men’s; Australia’s three medals are all in the women’s event."
-  },
-  {
-    "objectID": "men-vs-women.html#two-events-one-olympic-stage",
-    "href": "men-vs-women.html#two-events-one-olympic-stage",
-    "title": "Men vs Women",
-    "section": "",
-    "text": "Beach volleyball has featured men’s and women’s tournaments at every Games since its 1996 debut. Participation is measured in athlete-event records—two records for each competing pair—while podium results count each country-team once.\n\n\nEach point is a beach-volleyball athlete-event record. The age-height relationship is compared by event; shapes show medals only where the source records them.\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Shows r scales::comma(nrow(athlete_profiles)) of r scales::comma(nrow(beach_athletes)) athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024.\n\n\n\nSource: olympicAthletes::olympic_athletes. The chart plots 668 of 756 athlete-event records with reported height; records without height are omitted. Medal status is not reported by this source for 2020 or 2024.\n\n\n\n\n\n\n\n\n\nBeach volleyball participation by event and Games year. Source: olympicAthletes::olympic_athletes; 756 athlete-event records across eight editions.\n\n\n\n\nRecorded participation begins lower for women at the sport’s debut: 36 athlete-event rows versus 48 for men in 1996. From 2000 through 2024, both events have 48 rows per Games in this dataset; these are athlete-event counts, not audience or popularity measures.\n\n\n\n\n\n\n\nEach point is one of 48 medal-winning country-teams. Panels compare men’s and women’s results by Olympic year; 2020 and 2024 podiums use official Olympic results.\n\n\n\nSources: olympicAthletes for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all 48 country-team medal results once each, not once per athlete.\n\nAcross eight editions, each event awards 24 team medals. Brazil leads both tallies (8 women’s and 6 men’s medals), while the United States has 7 women’s and 4 men’s; Australia’s three medals are all in the women’s event."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "I’m Kaitlin Powell, a psychology student at New College of Florida and a collegiate beach volleyball athlete. I created this project to bring together my passion for the sport and my interest in data science."
-  },
-  {
-    "objectID": "about.html#about-kaitlin",
-    "href": "about.html#about-kaitlin",
-    "title": "About",
-    "section": "",
-    "text": "I’m Kaitlin Powell, a psychology student at New College of Florida and a collegiate beach volleyball athlete. I created this project to bring together my passion for the sport and my interest in data science."
-  },
-  {
-    "objectID": "about.html#about-the-project",
-    "href": "about.html#about-the-project",
-    "title": "About",
-    "section": "About the project",
-    "text": "About the project\nThis site explores the history, global participation, competitive performance, and evolution of Olympic beach volleyball through data analysis. It follows the sport from its Olympic debut in Atlanta in 1996 to the Paris 2024 Games.\n\n\nGitHub profile\nProject repository\nNew College of Florida\nk.powell28@ncf.edu"
-  },
-  {
-    "objectID": "about.html#data-and-methods",
-    "href": "about.html#data-and-methods",
-    "title": "About",
-    "section": "Data and methods",
-    "text": "Data and methods\n\nDataset and sources\nThe primary source is olympicAthletes::olympic_athletes, a dataset of 315,094 Olympic athlete-event records. Filtering to Summer Games Volleyball events identified as beach volleyball gives 756 beach-volleyball athlete-event records, covering eight editions: 1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024.\nThe package documents historical sources including the Olympic history dataset and Olympedia. For recent podiums, I use the official Tokyo 2020 results and official Paris 2024 results.\n\n\nMethodology\nI use R to load and prepare the data: filter to Summer Games, Volleyball, and beach-volleyball events; count participation as athlete-event rows; and standardize country labels from team identifiers for country-level comparisons. For medal analysis, I count each country-team’s result once per Games, event, and medal rather than counting both athletes on a pair as separate medals. Because medal labels are unavailable in the package for 2020 and 2024, I add those podiums from the official results above.\nI build the visualizations with ggplot2, Plotly, and Leaflet, and use Quarto to render the interactive website."
-  },
-  {
-    "objectID": "about.html#data-limitations",
-    "href": "about.html#data-limitations",
-    "title": "About",
-    "section": "Data limitations",
-    "text": "Data limitations\nAn athlete-event row is not a unique person: athletes who compete in multiple Games appear in multiple rows. The source also has incomplete country/team identifiers for recent editions: 171 of its 192 beach-volleyball records from 2020 and 2024 lack a country derived from the team field. For that reason, the country participation map is limited to 1996–2016 rather than assigning countries to records with missing identifiers. The 2020 and 2024 podiums are included only where official results support team-medal counts. Some athlete characteristics, including height, are also missing for a portion of records."
-  },
-  {
     "objectID": "explore.html",
     "href": "explore.html",
     "title": "Explore the Olympics",
@@ -126,25 +35,130 @@
     "text": "What those medals are made of\nThe next chart compares gold, silver, and bronze team medals by country. Hover for exact counts. Country totals include both men’s and women’s events across 1996–2024.\n\n\n\n\nGold, silver, and bronze team medals by country, 1996–2024. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Medal-type totals combine the 48 distinct country-team podium results.\n\nBrazil’s seven silvers equal the United States’ seven golds, even though Brazil leads in total medals. Hover each stack to compare a country’s medal mix; use the map filters above for the edition-specific view.\nData note: the 2020 and 2024 athlete-event records do not carry beach-volleyball medal labels in this release of the source. Their podium teams are added from the Tokyo 2020 results and Paris 2024 results, not inferred from missing values."
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Kaitlin Powell is a collegiate beach volleyball athlete at New College of Florida who wanted to combine her passion for the sport with data analysis. This website grew from that interest, bringing together the sport and an examination of its Olympic history.\n\n\n\nThis project explores Olympic beach volleyball participation, international success, athlete characteristics, and historical trends. It follows the sport across the eight Olympic editions represented in the analysis, from Atlanta 1996 through Paris 2024, and presents patterns in participation, age, country performance, and medals.\n\n\n\nThe original dataset is olympicAthletes::olympic_athletes, a package dataset containing 315,094 Olympic athlete-event observations. After filtering for Summer Games beach-volleyball events, the project uses 756 athlete-event records.\nThe filtered observations cover 1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024. Relevant variables include athlete ID, name, sex, age, height, weight, team, NOC, Games, year, season, city, sport, event, and medal status.\nFor 1996–2016, medals come from the athlete dataset. The project also uses official Tokyo 2020 beach volleyball results and official Paris 2024 beach volleyball results to add team-medal results for those editions.\n\n\n\nThe data was cleaned and filtered in R by retaining Summer Games records for the Volleyball sport and matching beach-volleyball event names. Where useful, team identifiers were standardized to country labels, missing or unavailable values were left unassigned, and selected visualizations were summarized by year, country, sex, or athlete characteristics.\nThe project distinguishes three units of analysis:\n\n\n\nEach row represents an athlete in a particular Games and event. An athlete who competed at more than one Olympics appears in more than one row.\n\n\n\nUnique-athlete counts use source athlete IDs. This number does not equal participation totals because one athlete may have records from multiple Olympic editions.\n\n\n\nMedal totals count one medal-winning team per Games, event, and medal. The two athletes on a pair are not counted as two separate medals.\n\n\nIndoor volleyball is included in the homepage comparison because it provides historical context for age patterns across both volleyball disciplines. The comparison is based on Summer Olympic Volleyball records rather than on beach volleyball alone.\n\n\n\nSome records have missing data, including athlete characteristics such as height. In addition, 171 of the 192 source beach-volleyball records from 2020 and 2024 lack a country that can be derived from the team field, so the country participation map is limited to 1996–2016. Missing identifiers are not replaced through inference.\nHistorical patterns show associations and changes over time, but they do not establish causation. Differences among Games, athletes, countries, data coverage, and Olympic rules should be considered when interpreting trends.\n\n\n\nThe website is built with R, the tidyverse and ggplot2, plotly, crosstalk, and leaflet. Quarto renders the pages and their analyses, and GitHub hosts the source project.\n\n\nView the project repository on GitHub"
+  },
+  {
+    "objectID": "about.html#about-the-author",
+    "href": "about.html#about-the-author",
+    "title": "About",
+    "section": "",
+    "text": "Kaitlin Powell is a collegiate beach volleyball athlete at New College of Florida who wanted to combine her passion for the sport with data analysis. This website grew from that interest, bringing together the sport and an examination of its Olympic history."
+  },
+  {
+    "objectID": "about.html#about-the-project",
+    "href": "about.html#about-the-project",
+    "title": "About",
+    "section": "",
+    "text": "This project explores Olympic beach volleyball participation, international success, athlete characteristics, and historical trends. It follows the sport across the eight Olympic editions represented in the analysis, from Atlanta 1996 through Paris 2024, and presents patterns in participation, age, country performance, and medals."
+  },
+  {
+    "objectID": "about.html#data-sources",
+    "href": "about.html#data-sources",
+    "title": "About",
+    "section": "",
+    "text": "The original dataset is olympicAthletes::olympic_athletes, a package dataset containing 315,094 Olympic athlete-event observations. After filtering for Summer Games beach-volleyball events, the project uses 756 athlete-event records.\nThe filtered observations cover 1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024. Relevant variables include athlete ID, name, sex, age, height, weight, team, NOC, Games, year, season, city, sport, event, and medal status.\nFor 1996–2016, medals come from the athlete dataset. The project also uses official Tokyo 2020 beach volleyball results and official Paris 2024 beach volleyball results to add team-medal results for those editions."
+  },
+  {
+    "objectID": "about.html#methodology",
+    "href": "about.html#methodology",
+    "title": "About",
+    "section": "",
+    "text": "The data was cleaned and filtered in R by retaining Summer Games records for the Volleyball sport and matching beach-volleyball event names. Where useful, team identifiers were standardized to country labels, missing or unavailable values were left unassigned, and selected visualizations were summarized by year, country, sex, or athlete characteristics.\nThe project distinguishes three units of analysis:\n\n\n\nEach row represents an athlete in a particular Games and event. An athlete who competed at more than one Olympics appears in more than one row.\n\n\n\nUnique-athlete counts use source athlete IDs. This number does not equal participation totals because one athlete may have records from multiple Olympic editions.\n\n\n\nMedal totals count one medal-winning team per Games, event, and medal. The two athletes on a pair are not counted as two separate medals.\n\n\nIndoor volleyball is included in the homepage comparison because it provides historical context for age patterns across both volleyball disciplines. The comparison is based on Summer Olympic Volleyball records rather than on beach volleyball alone."
+  },
+  {
+    "objectID": "about.html#limitations",
+    "href": "about.html#limitations",
+    "title": "About",
+    "section": "",
+    "text": "Some records have missing data, including athlete characteristics such as height. In addition, 171 of the 192 source beach-volleyball records from 2020 and 2024 lack a country that can be derived from the team field, so the country participation map is limited to 1996–2016. Missing identifiers are not replaced through inference.\nHistorical patterns show associations and changes over time, but they do not establish causation. Differences among Games, athletes, countries, data coverage, and Olympic rules should be considered when interpreting trends."
+  },
+  {
+    "objectID": "about.html#tools-and-reproducibility",
+    "href": "about.html#tools-and-reproducibility",
+    "title": "About",
+    "section": "",
+    "text": "The website is built with R, the tidyverse and ggplot2, plotly, crosstalk, and leaflet. Quarto renders the pages and their analyses, and GitHub hosts the source project.\n\n\nView the project repository on GitHub"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Olympic Beach Volleyball: Road to Gold",
+    "section": "",
+    "text": "Atlanta 1996 — Paris 2024\n\n\n\nFrom Atlanta to Paris, discover the athletes, nations, and podium moments that shaped Olympic beach volleyball.\n\nExplore the data →"
+  },
+  {
+    "objectID": "index.html#olympic-volleyball-ages-at-a-glance",
+    "href": "index.html#olympic-volleyball-ages-at-a-glance",
+    "title": "Olympic Beach Volleyball: Road to Gold",
+    "section": "Olympic volleyball ages, at a glance",
+    "text": "Olympic volleyball ages, at a glance\nEach point is one age-reported person-event record. Beach volleyball is highlighted; indoor Volleyball provides historical context. Small, seeded jitter separates overlapping points without adding or removing records.\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Each point is one age-reported Summer Olympic Volleyball athlete-event record (4,783 of 4,792); gold highlights all 756 beach volleyball records from 1996–2024.\n\n\n\nKey takeaway: The median recorded age is 29 for beach volleyball and 25 for indoor Volleyball. The oldest source record is age 73—the axis previously rounded up to 75 for its five-year tick marks.\n\nOne point represents a person listed for one Games and event—not a unique athlete across their career. The chart contains 4,783 records from 3,448 distinct source IDs; repeat Olympians therefore appear more than once. The source’s oldest indoor Volleyball entries include coaching staff (for example, Antonio Giacobbe at age 73), so these genuine records are retained but should not be read as player ages. The source does not identify participant roles.\n\n\nNew to beach volleyball?\n\n\nThe game in a few serves\n\n\nTwo players, one team\nEach side fields a pair on a sand court. Teammates work together to keep the ball in play and send it over the net.\n\n\nRally scoring\nA point is awarded after every rally. Matches are best of three sets: the first two go to 21 points, and a deciding set, if needed, goes to 15. A team must win a set by two points.\n\n\nFrom pools to podium\nIn recent Olympic editions, teams begin in pool play before the knockout rounds. Qualification details vary by Games; every edition ends with one medal-winning team in each event for gold, silver, and bronze.\n\n\n\n\nContinue to Olympic Trends to compare participation across Summer Games.\nSources: olympicAthletes package and data documentation. See methodology and results sources for team-medal counting and the recent podium supplement."
+  },
+  {
+    "objectID": "index.html#sport-primer-title",
+    "href": "index.html#sport-primer-title",
+    "title": "Olympic Beach Volleyball: Road to Gold",
+    "section": "The game in a few serves",
+    "text": "The game in a few serves\n\n\nTwo players, one team\nEach side fields a pair on a sand court. Teammates work together to keep the ball in play and send it over the net.\n\n\nRally scoring\nA point is awarded after every rally. Matches are best of three sets: the first two go to 21 points, and a deciding set, if needed, goes to 15. A team must win a set by two points.\n\n\nFrom pools to podium\nIn recent Olympic editions, teams begin in pool play before the knockout rounds. Qualification details vary by Games; every edition ends with one medal-winning team in each event for gold, silver, and bronze."
+  },
+  {
+    "objectID": "olympic-trends.html",
+    "href": "olympic-trends.html",
+    "title": "Olympic Trends",
+    "section": "",
+    "text": "Each point is one medal-winning country-team. Compare the men’s and women’s podiums across all eight Games; hover for the country, team, year, and medal.\n\n\n\n\nAll 48 beach-volleyball team medals, one point per podium team. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each point is one of the 48 team-medal results.\n\nThere are only 48 distinct Olympic beach-volleyball team medals across eight editions, so every podium team is shown instead of expanding medal totals into extra points."
+  },
+  {
+    "objectID": "olympic-trends.html#every-team-medal-from-atlanta-to-paris",
+    "href": "olympic-trends.html#every-team-medal-from-atlanta-to-paris",
+    "title": "Olympic Trends",
+    "section": "",
+    "text": "Each point is one medal-winning country-team. Compare the men’s and women’s podiums across all eight Games; hover for the country, team, year, and medal.\n\n\n\n\nAll 48 beach-volleyball team medals, one point per podium team. Source: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each point is one of the 48 team-medal results.\n\nThere are only 48 distinct Olympic beach-volleyball team medals across eight editions, so every podium team is shown instead of expanding medal totals into extra points."
+  },
+  {
+    "objectID": "olympic-trends.html#one-olympic-timeline-three-lenses",
+    "href": "olympic-trends.html#one-olympic-timeline-three-lenses",
+    "title": "Olympic Trends",
+    "section": "One Olympic timeline, three lenses",
+    "text": "One Olympic timeline, three lenses\nThe broadest view follows every Summer Olympic athlete-event entry. The gold trace then zooms in: first on all indoor and beach Volleyball entries, then on beach volleyball alone, identified from the event field. Each panel has its own vertical scale so the specialist event remains visible.\n\n\n\n\n\nAthlete-event entries at Summer Olympic Games. Panels use separate vertical scales.\n\n\n\n\nBecause each panel has its own vertical scale, compare the shape of the trends rather than their heights across panels. Beach volleyball entries first appear in 1996 (84 athlete-event rows) and reach 96 in 2000, where they remain through 2024."
+  },
+  {
+    "objectID": "olympic-trends.html#athlete-ages-across-the-games",
+    "href": "olympic-trends.html#athlete-ages-across-the-games",
+    "title": "Olympic Trends",
+    "section": "Athlete ages across the Games",
+    "text": "Athlete ages across the Games\nThese points show individual beach-volleyball athlete-event records, not yearly averages. The spread reveals the age range within each event and how it changes across editions.\n\n\n\n\nEach point is one of 756 beach-volleyball athlete-event records from 1996–2024. Source: olympicAthletes::olympic_athletes.\n\n\n\nSource: olympicAthletes::olympic_athletes; 756 athlete-event rows from 1996–2024. Age is present for every beach-volleyball record in this source.\n\nBecause each marker is a real athlete-event record, repeated appearances by the same athlete in different editions remain separate rows and are not synthetic extra observations.\n\n\n\n\n\n\nNoteWhat counts as a record?\n\n\n\nOne row represents one athlete at one Games edition in one event—not one unique person or one team. Beach volleyball is filtered from event within the Volleyball sport, rather than treating all Volleyball entries as beach volleyball.\n\n\nThe Men vs. Women page focuses on beach volleyball participation and podiums by event."
+  },
+  {
     "objectID": "road-to-gold.html",
     "href": "road-to-gold.html",
     "title": "Road to Gold",
     "section": "",
-    "text": "Since beach volleyball joined the Olympic programme in 1996, Brazil has earned 14 team medals, including 4 golds. Brazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women’s podium in Paris. The United States is next with 11 medals, 7 of them gold, built across both men’s and women’s events.\nSuccess has never belonged to just two flags. Australia won women’s gold in 2000; Germany’s golds came in the men’s event in 2012 and the women’s in 2016; and China took silver and bronze in the 2008 women’s competition. More recently, Norway and Sweden captured men’s gold in Tokyo and Paris, while Qatar earned men’s bronze at both editions."
+    "text": "Brazil has earned 14 team medals, three more than the United States with 11. That is the most sustained success in the Olympic beach volleyball medal table, but the podium is not limited to two countries: 15 countries have won a medal.\nBrazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women’s podium in Paris. The United States has more golds, while Brazil’s seven silvers match the U.S. total of seven golds. More recent editions brought men’s golds for Norway in Tokyo and Sweden in Paris."
   },
   {
-    "objectID": "road-to-gold.html#a-short-history-of-the-podium",
-    "href": "road-to-gold.html#a-short-history-of-the-podium",
+    "objectID": "road-to-gold.html#brazil-leads-the-olympic-beach-volleyball-podium",
+    "href": "road-to-gold.html#brazil-leads-the-olympic-beach-volleyball-podium",
     "title": "Road to Gold",
     "section": "",
-    "text": "Since beach volleyball joined the Olympic programme in 1996, Brazil has earned 14 team medals, including 4 golds. Brazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women’s podium in Paris. The United States is next with 11 medals, 7 of them gold, built across both men’s and women’s events.\nSuccess has never belonged to just two flags. Australia won women’s gold in 2000; Germany’s golds came in the men’s event in 2012 and the women’s in 2016; and China took silver and bronze in the 2008 women’s competition. More recently, Norway and Sweden captured men’s gold in Tokyo and Paris, while Qatar earned men’s bronze at both editions."
+    "text": "Brazil has earned 14 team medals, three more than the United States with 11. That is the most sustained success in the Olympic beach volleyball medal table, but the podium is not limited to two countries: 15 countries have won a medal.\nBrazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women’s podium in Paris. The United States has more golds, while Brazil’s seven silvers match the U.S. total of seven golds. More recent editions brought men’s golds for Norway in Tokyo and Sweden in Paris."
   },
   {
     "objectID": "road-to-gold.html#every-medal-counted-once",
     "href": "road-to-gold.html#every-medal-counted-once",
     "title": "Road to Gold",
     "section": "Every medal, counted once",
-    "text": "Every medal, counted once\nThe chart counts a medal for the country-team pair in an event, not for each athlete on that pair. Each edition awards three medals in each of two events, giving 48 team medals across eight editions.\n\n\n\n\nCountry totals aggregate 48 beach-volleyball team medals across eight editions. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Country and medal-type totals aggregate 48 team-medal results.\n\nBrazil leads the total with 14 team medals, while the United States has 11. Their medal mixes differ: Brazil’s seven silvers match the U.S. seven golds, so the overall leader is not the gold-medal leader."
+    "text": "Every medal, counted once\nEach mark counts one medal for a country-team pair in one event, not one medal for each teammate. There are 48 team medals across eight editions.\n\n\n\n\nCountry totals aggregate 48 beach-volleyball team medals across eight editions. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nObservation count: 48 team-medal results produce 25 medal-type segments across 15 countries. Sources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024.\n\nBrazil leads the total, while the United States leads in golds. Hover over a bar segment for its medal count and the country’s total."
+  },
+  {
+    "objectID": "road-to-gold.html#how-countries-medal-totals-changed-across-editions",
+    "href": "road-to-gold.html#how-countries-medal-totals-changed-across-editions",
+    "title": "Road to Gold",
+    "section": "How countries’ medal totals changed across editions",
+    "text": "How countries’ medal totals changed across editions\nThis interactive timeline follows each country’s cumulative team medals from Atlanta to Paris. Hover for the medals earned in an edition and the running total; click countries in the legend to focus the comparison.\n\n\n\n\nCumulative beach-volleyball team medals by country across eight Olympic editions. Each line is a country; zero-medal editions remain at the previous cumulative total.\n\n\n\nObservation count: 48 real team-medal results underlie 120 cumulative country-edition points (15 countries across eight editions). Zero-medal editions show the unchanged cumulative total; they are not extra medal results.\n\nBrazil’s cumulative lead builds across multiple editions, while newer winners such as Norway and Sweden appear in the final years. The view separates a country’s medal-winning years from its total over time."
   },
   {
     "objectID": "road-to-gold.html#where-each-medal-was-won",
@@ -154,10 +168,31 @@
     "text": "Where each medal was won\nThis timeline returns to the underlying podium results: one mark per medal-winning country-team. It shows when each country’s medals came and whether they were won in the men’s or women’s event.\n\n\n\n\nAll 48 team-medal results, shown individually by country, Games year, event, and medal. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024.\n\n\n\nSources: olympicAthletes through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Each mark is one of the 48 country-team medal results.\n\nThe podium repeats across editions for a small group of countries, but the timeline distinguishes a one-time medal from sustained performance. Hover for the exact team, medal, year, and event."
   },
   {
+    "objectID": "road-to-gold.html#the-athletes-behind-the-podium",
+    "href": "road-to-gold.html#the-athletes-behind-the-podium",
+    "title": "Road to Gold",
+    "section": "The athletes behind the podium",
+    "text": "The athletes behind the podium\nThis athlete-level view shows age by Olympic edition for beach volleyball competitors. Every age-reported beach-volleyball record is included; color distinguishes the men’s and women’s events.\n\n\n\n\nBeach volleyball athlete-event records by age, event, and Olympic year. Source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 756 athlete-event records produce 756 points, representing 520 distinct source IDs. All 756 beach-volleyball records in the source have reported ages.\n\nThe median age is 29. A point is one person’s participation in one Games and event; an athlete who returns in later editions appears again, so the points are records, not unique people."
+  },
+  {
     "objectID": "road-to-gold.html#methodology",
     "href": "road-to-gold.html#methodology",
     "title": "Road to Gold",
     "section": "Methodology",
     "text": "Methodology\n\nThe source is olympicAthletes::olympic_athletes, a 315,094-row, 16-column athlete-event dataset. The package describes 1896–2016 records as extending the Olympic history dataset, with later records sourced from Olympedia.\nBeach volleyball is selected by requiring sport == \"Volleyball\" and a beach-volleyball match in event. The package’s 4,792-row volleyball_athletes subset contains indoor and beach volleyball; it is not used as a beach-volleyball count.\nFor 1996–2016, the source repeats the medal on both athletes’ rows. We retain one row for each Games year, event, team identifier, and medal, then normalize team suffixes (such as -1) only when aggregating results by country.\nThe package data used here has no beach-volleyball medal labels for 2020 or 2024. We add the six podium teams for each of those editions from the Tokyo 2020 and Paris 2024 official results pages. These are team-level rows, so no athlete-level medal duplication is introduced.\nParticipation charts count athlete-event rows; medal charts count medal-winning teams. A pair therefore contributes two participation records but only one medal.\nTo render the site, install R packages olympicAthletes, tidyverse, ggplot2, plotly, crosstalk, leaflet, rnaturalearth, and geojsonsf, then run quarto render.\n\nFor other country results, edition details, and filters, head to Country Explorer."
+  },
+  {
+    "objectID": "men-vs-women.html",
+    "href": "men-vs-women.html",
+    "title": "Men vs Women",
+    "section": "",
+    "text": "Since 2000, the men’s and women’s events each have 48 athlete-event records at every Games; in 1996, the women’s event had 36 compared with 48 for men. Across all editions, the median recorded age is 30 for men and 28 for women. Each event has earned 24 team medals.\nAn athlete-event record is one person’s participation in one Games and event, not a unique athlete. The 756 age records represent 520 distinct source IDs; returning athletes appear in more than one record.\n\n\nThe distributions overlap substantially. The median age is 30 in the men’s event and 28 in the women’s event; each dot is one real source record.\n\n\n\n\nOne point per beach-volleyball athlete-event record with reported age. Source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 756 age-reported athlete-event records and the same number of plotted points; 520 distinct source IDs. All beach-volleyball records in this source have an age.\n\n\n\n\nThis height-versus-age view retains the existing individual profiles. Points are colored by event and shaped by medal status where the source reports it.\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Shows 668 of 756 athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024.\n\n\n\nObservation count: 668 of 756 athlete-event records have reported age and height and are plotted; 88 lack height. Medal status is not reported by this source for 2020 or 2024.\n\n\n\n\nHeight is reported for 668 of 756 athlete-event records. That is enough for a descriptive comparison, but missing heights are noted rather than assumed to match the observed records.\n\n\n\n\nOne point per beach-volleyball athlete-event record with reported height. Heights are in centimeters; source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 668 reported heights are plotted: 343 men’s and 325 women’s records. Height is missing for 88 records (41 men and 47 women). Median recorded height is 193 cm for men and 180 cm for women.\n\n\n\n\n\n\n\n\nAthlete-event participation by event and Olympic year. Source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 756 athlete-event records are aggregated to 16 year-by-event points (eight editions and two events). These counts measure listed participation, not audience or popularity.\n\n\n\n\n\n\n\n\nEach point is one of 48 medal-winning country-teams. Panels compare men’s and women’s results by Olympic year; 2020 and 2024 podiums use official Olympic results.\n\n\n\nSources: olympicAthletes for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all 48 country-team medal results once each, not once per athlete.\n\nObservation count: 48 medal-winning country-teams produce 48 points, 24 per event. Brazil leads both tallies (8 women’s and 6 men’s medals), while the United States has 7 women’s and 4 men’s; Australia’s three medals are all in the women’s event. These are team results, not individual athlete medals."
+  },
+  {
+    "objectID": "men-vs-women.html#participation-matched-after-2000-age-and-podiums-show-smaller-differences",
+    "href": "men-vs-women.html#participation-matched-after-2000-age-and-podiums-show-smaller-differences",
+    "title": "Men vs Women",
+    "section": "",
+    "text": "Since 2000, the men’s and women’s events each have 48 athlete-event records at every Games; in 1996, the women’s event had 36 compared with 48 for men. Across all editions, the median recorded age is 30 for men and 28 for women. Each event has earned 24 team medals.\nAn athlete-event record is one person’s participation in one Games and event, not a unique athlete. The 756 age records represent 520 distinct source IDs; returning athletes appear in more than one record.\n\n\nThe distributions overlap substantially. The median age is 30 in the men’s event and 28 in the women’s event; each dot is one real source record.\n\n\n\n\nOne point per beach-volleyball athlete-event record with reported age. Source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 756 age-reported athlete-event records and the same number of plotted points; 520 distinct source IDs. All beach-volleyball records in this source have an age.\n\n\n\n\nThis height-versus-age view retains the existing individual profiles. Points are colored by event and shaped by medal status where the source reports it.\n\n\n\n\nSource: olympicAthletes::olympic_athletes. Shows 668 of 756 athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024.\n\n\n\nObservation count: 668 of 756 athlete-event records have reported age and height and are plotted; 88 lack height. Medal status is not reported by this source for 2020 or 2024.\n\n\n\n\nHeight is reported for 668 of 756 athlete-event records. That is enough for a descriptive comparison, but missing heights are noted rather than assumed to match the observed records.\n\n\n\n\nOne point per beach-volleyball athlete-event record with reported height. Heights are in centimeters; source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 668 reported heights are plotted: 343 men’s and 325 women’s records. Height is missing for 88 records (41 men and 47 women). Median recorded height is 193 cm for men and 180 cm for women.\n\n\n\n\n\n\n\n\nAthlete-event participation by event and Olympic year. Source: olympicAthletes::olympic_athletes.\n\n\n\nObservation count: 756 athlete-event records are aggregated to 16 year-by-event points (eight editions and two events). These counts measure listed participation, not audience or popularity.\n\n\n\n\n\n\n\n\nEach point is one of 48 medal-winning country-teams. Panels compare men’s and women’s results by Olympic year; 2020 and 2024 podiums use official Olympic results.\n\n\n\nSources: olympicAthletes for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all 48 country-team medal results once each, not once per athlete.\n\nObservation count: 48 medal-winning country-teams produce 48 points, 24 per event. Brazil leads both tallies (8 women’s and 6 men’s medals), while the United States has 7 women’s and 4 men’s; Australia’s three medals are all in the women’s event. These are team results, not individual athlete medals."
   }
 ]

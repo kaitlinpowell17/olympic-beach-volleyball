@@ -45,7 +45,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d0f63781f56d8920b29a9d59ce83fef4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-23932f46930b626f82bedd4deb6ab4ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -156,41 +156,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about-kaitlin" class="level2">
-<h2 class="anchored" data-anchor-id="about-kaitlin">About Kaitlin</h2>
-<p>I’m <strong>Kaitlin Powell</strong>, a psychology student at <strong>New College of Florida</strong> and a collegiate beach volleyball athlete. I created this project to bring together my passion for the sport and my interest in data science.</p>
+<div class="about-sections">
+<section id="about-the-author" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-author">About the Author</h2>
+<p><strong>Kaitlin Powell</strong> is a collegiate beach volleyball athlete at New College of Florida who wanted to combine her passion for the sport with data analysis. This website grew from that interest, bringing together the sport and an examination of its Olympic history.</p>
 </section>
 <section id="about-the-project" class="level2">
-<h2 class="anchored" data-anchor-id="about-the-project">About the project</h2>
-<p>This site explores the history, global participation, competitive performance, and evolution of Olympic beach volleyball through data analysis. It follows the sport from its Olympic debut in Atlanta in 1996 to the Paris 2024 Games.</p>
+<h2 class="anchored" data-anchor-id="about-the-project">About the Project</h2>
+<p>This project explores Olympic beach volleyball participation, international success, athlete characteristics, and historical trends. It follows the sport across the eight Olympic editions represented in the analysis, from Atlanta 1996 through Paris 2024, and presents patterns in participation, age, country performance, and medals.</p>
+</section>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
+<p>The original dataset is <a href="https://moderndive.github.io/olympicAthletes/"><code>olympicAthletes::olympic_athletes</code></a>, a package dataset containing <strong>315,094 Olympic athlete-event observations</strong>. After filtering for Summer Games beach-volleyball events, the project uses <strong>756 athlete-event records</strong>.</p>
+<p>The filtered observations cover <strong>1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024</strong>. Relevant variables include athlete ID, name, sex, age, height, weight, team, NOC, Games, year, season, city, sport, event, and medal status.</p>
+<p>For 1996–2016, medals come from the athlete dataset. The project also uses <a href="https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball">official Tokyo 2020 beach volleyball results</a> and <a href="https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball">official Paris 2024 beach volleyball results</a> to add team-medal results for those editions.</p>
+</section>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
+<p>The data was cleaned and filtered in R by retaining Summer Games records for the Volleyball sport and matching beach-volleyball event names. Where useful, team identifiers were standardized to country labels, missing or unavailable values were left unassigned, and selected visualizations were summarized by year, country, sex, or athlete characteristics.</p>
+<p>The project distinguishes three units of analysis:</p>
+<div class="about-note-grid">
+<section id="athlete-event-records" class="level3 about-note-card">
+<h3 class="anchored" data-anchor-id="athlete-event-records">Athlete-event records</h3>
+<p>Each row represents an athlete in a particular Games and event. An athlete who competed at more than one Olympics appears in more than one row.</p>
+</section>
+<section id="unique-athletes" class="level3 about-note-card">
+<h3 class="anchored" data-anchor-id="unique-athletes">Unique athletes</h3>
+<p>Unique-athlete counts use source athlete IDs. This number does not equal participation totals because one athlete may have records from multiple Olympic editions.</p>
+</section>
+<section id="team-medals" class="level3 about-note-card">
+<h3 class="anchored" data-anchor-id="team-medals">Team medals</h3>
+<p>Medal totals count one medal-winning team per Games, event, and medal. The two athletes on a pair are not counted as two separate medals.</p>
+</section>
+</div>
+<p>Indoor volleyball is included in the homepage comparison because it provides historical context for age patterns across both volleyball disciplines. The comparison is based on Summer Olympic Volleyball records rather than on beach volleyball alone.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>Some records have missing data, including athlete characteristics such as height. In addition, 171 of the 192 source beach-volleyball records from 2020 and 2024 lack a country that can be derived from the team field, so the country participation map is limited to 1996–2016. Missing identifiers are not replaced through inference.</p>
+<p>Historical patterns show associations and changes over time, but they do not establish causation. Differences among Games, athletes, countries, data coverage, and Olympic rules should be considered when interpreting trends.</p>
+</section>
+<section id="tools-and-reproducibility" class="level2">
+<h2 class="anchored" data-anchor-id="tools-and-reproducibility">Tools and Reproducibility</h2>
+<p>The website is built with R, the <code>tidyverse</code> and <code>ggplot2</code>, <code>plotly</code>, <code>crosstalk</code>, and <code>leaflet</code>. Quarto renders the pages and their analyses, and GitHub hosts the source project.</p>
 <div class="about-links">
 <ul>
-<li><a href="https://github.com/kaitlinpowell71">GitHub profile</a></li>
-<li><a href="https://github.com/kaitlinpowell17/olympic-beach-volleyball">Project repository</a></li>
-<li><a href="https://www.ncf.edu/">New College of Florida</a></li>
-<li><a href="mailto:k.powell28@ncf.edu">k.powell28@ncf.edu</a></li>
+<li><a href="https://github.com/kaitlinpowell17/olympic-beach-volleyball">View the project repository on GitHub</a></li>
 </ul>
 </div>
 </section>
-<section id="data-and-methods" class="level2">
-<h2 class="anchored" data-anchor-id="data-and-methods">Data and methods</h2>
-<section id="dataset-and-sources" class="level3">
-<h3 class="anchored" data-anchor-id="dataset-and-sources">Dataset and sources</h3>
-<p>The primary source is <a href="https://moderndive.github.io/olympicAthletes/"><code>olympicAthletes::olympic_athletes</code></a>, a dataset of <strong>315,094 Olympic athlete-event records</strong>. Filtering to Summer Games Volleyball events identified as beach volleyball gives <strong>756 beach-volleyball athlete-event records</strong>, covering eight editions: <strong>1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024</strong>.</p>
-<p>The package documents historical sources including the <a href="https://github.com/rgriff23/Olympic_history">Olympic history dataset</a> and <a href="https://www.olympedia.org/">Olympedia</a>. For recent podiums, I use the <a href="https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball">official Tokyo 2020 results</a> and <a href="https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball">official Paris 2024 results</a>.</p>
-</section>
-<section id="methodology" class="level3">
-<h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
-<p>I use <strong>R</strong> to load and prepare the data: filter to Summer Games, Volleyball, and beach-volleyball events; count participation as athlete-event rows; and standardize country labels from team identifiers for country-level comparisons. For medal analysis, I count each country-team’s result once per Games, event, and medal rather than counting both athletes on a pair as separate medals. Because medal labels are unavailable in the package for 2020 and 2024, I add those podiums from the official results above.</p>
-<p>I build the visualizations with <strong>ggplot2</strong>, <strong>Plotly</strong>, and <strong>Leaflet</strong>, and use <strong>Quarto</strong> to render the interactive website.</p>
-</section>
-</section>
-<section id="data-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="data-limitations">Data limitations</h2>
-<p>An athlete-event row is not a unique person: athletes who compete in multiple Games appear in multiple rows. The source also has incomplete country/team identifiers for recent editions: <strong>171 of its 192 beach-volleyball records from 2020 and 2024 lack a country derived from the team field</strong>. For that reason, the country participation map is limited to 1996–2016 rather than assigning countries to records with missing identifiers. The 2020 and 2024 podiums are included only where official results support team-medal counts. Some athlete characteristics, including height, are also missing for a portion of records.</p>
+</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -266,7 +283,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/kaitlinpowell17\.github\.io\/olympic-beach-volleyball\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
