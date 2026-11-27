@@ -17,26 +17,74 @@ medal_team_timeline <- beach_medals |>
       "<br>Medal: ", medal
     )
   )
+
+country_medal_progress <- medal_timeline |>
+  group_by(year, country) |>
+  summarise(
+    edition_medals = sum(medal_count),
+    cumulative_medals = sum(cumulative_medals),
+    .groups = "drop"
+  ) |>
+  mutate(
+    hover_text = paste0(
+      "<b>", country, "</b>",
+      "<br>Olympic year: ", year,
+      "<br>Team medals this edition: ", edition_medals,
+      "<br>Cumulative team medals: ", cumulative_medals
+    )
+  )
+
+beach_athlete_age_records <- beach_athletes |>
+  filter(!is.na(age)) |>
+  mutate(
+    medal_status = case_when(
+      is.na(medal) & year >= 2020 ~ "Not reported by source",
+      is.na(medal) ~ "No medal",
+      TRUE ~ as.character(medal)
+    ),
+    hover_text = paste0(
+      "<b>", name, "</b>",
+      "<br>Age: ", age, " years",
+      "<br>Country/team: ", country, " (NOC: ", noc, ")",
+      "<br>Olympic year: ", year,
+      "<br>Event: ", gender, " beach volleyball",
+      "<br>Medal status: ", medal_status
+    )
+  )
 ```
 
-## A short history of the podium
+## Brazil leads the Olympic beach volleyball podium
 
-Since beach volleyball joined the Olympic programme in 1996, **Brazil has earned `r brazil_medals` team medals, including `r brazil_gold_medals` golds**. Brazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women's podium in Paris. **The United States is next with `r usa_medals` medals, `r usa_gold_medals` of them gold**, built across both men's and women's events.
+Brazil has earned **`r brazil_medals` team medals**, three more than the United States with **`r usa_medals`**. That is the most sustained success in the Olympic beach volleyball medal table, but the podium is not limited to two countries: **`r dplyr::n_distinct(beach_medals$country)`** countries have won a medal.
 
-Success has never belonged to just two flags. Australia won women's gold in 2000; Germany's golds came in the men's event in 2012 and the women's in 2016; and China took silver and bronze in the 2008 women's competition. More recently, Norway and Sweden captured men's gold in Tokyo and Paris, while Qatar earned men's bronze at both editions.
+Brazil reached the podium at every Games from 1996 through 2016, then returned to the top of the women's podium in Paris. The United States has more golds, while Brazil's seven silvers match the U.S. total of seven golds. More recent editions brought men's golds for Norway in Tokyo and Sweden in Paris.
 
 ## Every medal, counted once
 
-The chart counts a medal for the **country-team pair in an event**, not for each athlete on that pair. Each edition awards three medals in each of two events, giving `r nrow(beach_medals)` team medals across eight editions.
+Each mark counts one medal for a **country-team pair in one event**, not one medal for each teammate. There are **`r nrow(beach_medals)`** team medals across eight editions.
 
 ```{r}
 #| echo: false
 #| fig-height: 7
 #| fig-cap: "Country totals aggregate 48 beach-volleyball team medals across eight editions. Sources: olympicAthletes through 2016 and official Olympic results for 2020 and 2024."
 
-medal_leader_chart <- country_medal_type_totals |>
-  mutate(country = forcats::fct_reorder(country, medal_count, .fun = sum)) |>
-  ggplot(aes(x = medal_count, y = country, fill = medal)) +
+medal_leader_data <- country_medal_type_totals |>
+  left_join(country_medal_totals, by = "country") |>
+  mutate(country = forcats::fct_reorder(country, total_medals))
+
+medal_leader_chart <- ggplot(
+  medal_leader_data,
+  aes(
+    x = medal_count,
+    y = country,
+    fill = medal,
+    text = paste0(
+      as.character(country),
+      "<br>", medal, ": ", medal_count,
+      "<br>Total team medals: ", total_medals
+    )
+  )
+) +
   geom_col(width = 0.72, color = "white", linewidth = 0.25) +
   scale_fill_manual(
     values = c(Gold = "#c99837", Silver = "#9caab5", Bronze = "#b87950"),
@@ -65,14 +113,69 @@ medal_leader_chart <- country_medal_type_totals |>
     plot.caption = element_text(color = "#637780", hjust = 0)
   )
 
-plotly::ggplotly(medal_leader_chart, tooltip = c("y", "x", "fill"))
+plotly::ggplotly(medal_leader_chart, tooltip = "text")
 ```
 
 ::: {.source-note}
-Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024. Country and medal-type totals aggregate **`r scales::comma(nrow(beach_medals))`** team-medal results.
+**Observation count:** **`r nrow(beach_medals)`** team-medal results produce **`r nrow(country_medal_type_totals)`** medal-type segments across **`r dplyr::n_distinct(beach_medals$country)`** countries. Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2020 and Paris 2024.
 :::
 
-Brazil leads the total with 14 team medals, while the United States has 11. Their medal mixes differ: Brazil's seven silvers match the U.S. seven golds, so the overall leader is not the gold-medal leader.
+Brazil leads the total, while the United States leads in golds. Hover over a bar segment for its medal count and the country's total.
+
+## How countries' medal totals changed across editions
+
+This interactive timeline follows each country's **cumulative team medals** from Atlanta to Paris. Hover for the medals earned in an edition and the running total; click countries in the legend to focus the comparison.
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-cap: "Cumulative beach-volleyball team medals by country across eight Olympic editions. Each line is a country; zero-medal editions remain at the previous cumulative total."
+
+country_progress_chart <- plotly::plot_ly(
+  country_medal_progress,
+  x = ~year,
+  y = ~cumulative_medals,
+  color = ~country,
+  split = ~country,
+  type = "scatter",
+  mode = "lines+markers",
+  text = ~hover_text,
+  hoverinfo = "text",
+  colors = grDevices::hcl.colors(
+    dplyr::n_distinct(country_medal_progress$country),
+    palette = "Dynamic"
+  ),
+  marker = list(size = 7),
+  line = list(width = 2)
+) |>
+  plotly::layout(
+    xaxis = list(
+      title = "Olympic edition",
+      tickmode = "array",
+      tickvals = sort(unique(country_medal_progress$year))
+    ),
+    yaxis = list(
+      title = "Cumulative team medals",
+      rangemode = "tozero"
+    ),
+    legend = list(
+      title = list(text = "Country"),
+      orientation = "h",
+      x = 0,
+      y = -0.24
+    ),
+    hovermode = "closest",
+    margin = list(t = 30, b = 115)
+  )
+
+country_progress_chart
+```
+
+::: {.source-note}
+**Observation count:** **`r nrow(beach_medals)`** real team-medal results underlie **`r nrow(country_medal_progress)`** cumulative country-edition points (**`r dplyr::n_distinct(country_medal_progress$country)`** countries across eight editions). Zero-medal editions show the unchanged cumulative total; they are not extra medal results.
+:::
+
+Brazil's cumulative lead builds across multiple editions, while newer winners such as Norway and Sweden appear in the final years. The view separates a country's medal-winning years from its total over time.
 
 ## Where each medal was won
 
@@ -121,6 +224,56 @@ Sources: `olympicAthletes` through 2016 and official Olympic results for Tokyo 2
 :::
 
 The podium repeats across editions for a small group of countries, but the timeline distinguishes a one-time medal from sustained performance. Hover for the exact team, medal, year, and event.
+
+## The athletes behind the podium
+
+This athlete-level view shows age by Olympic edition for beach volleyball competitors. Every age-reported beach-volleyball record is included; color distinguishes the men's and women's events.
+
+```{r}
+#| echo: false
+#| fig-height: 6
+#| fig-cap: "Beach volleyball athlete-event records by age, event, and Olympic year. Source: olympicAthletes::olympic_athletes."
+
+athlete_age_chart <- ggplot(
+  beach_athlete_age_records,
+  aes(
+    x = year,
+    y = age,
+    color = gender,
+    text = hover_text
+  )
+) +
+  geom_point(
+    position = position_jitter(width = 0.18, height = 0.15, seed = 2024),
+    alpha = 0.65,
+    size = 2.2
+  ) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  scale_x_continuous(breaks = sort(unique(beach_athlete_age_records$year))) +
+  scale_y_continuous(breaks = scales::breaks_width(5)) +
+  labs(
+    title = "Beach volleyball competitors span generations",
+    x = "Olympic year",
+    y = "Age (years)",
+    color = "Event"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.title = element_text(color = "#355260"),
+    plot.title = element_text(color = "#10384a", face = "bold")
+  )
+
+plotly::ggplotly(athlete_age_chart, tooltip = "text")
+```
+
+::: {.source-note}
+**Observation count:** **`r nrow(beach_athlete_age_records)`** athlete-event records produce **`r nrow(beach_athlete_age_records)`** points, representing **`r dplyr::n_distinct(beach_athlete_age_records$id)`** distinct source IDs. All **`r nrow(beach_athletes)`** beach-volleyball records in the source have reported ages.
+:::
+
+The median age is **`r median(beach_athlete_age_records$age)`**. A point is one person's participation in one Games and event; an athlete who returns in later editions appears again, so the points are records, not unique people.
 
 ## Methodology {#methodology}
 

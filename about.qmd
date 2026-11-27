@@ -2,35 +2,64 @@
 title: "About"
 ---
 
-## About Kaitlin
+<div class="about-sections">
 
-I'm **Kaitlin Powell**, a psychology student at **New College of Florida** and a collegiate beach volleyball athlete. I created this project to bring together my passion for the sport and my interest in data science.
+## About the Author
 
-## About the project
+**Kaitlin Powell** is a collegiate beach volleyball athlete at New College of Florida who wanted to combine her passion for the sport with data analysis. This website grew from that interest, bringing together the sport and an examination of its Olympic history.
 
-This site explores the history, global participation, competitive performance, and evolution of Olympic beach volleyball through data analysis. It follows the sport from its Olympic debut in Atlanta in 1996 to the Paris 2024 Games.
+## About the Project
 
-::: {.about-links}
-- [GitHub profile](https://github.com/kaitlinpowell71)
-- [Project repository](https://github.com/kaitlinpowell17/olympic-beach-volleyball)
-- [New College of Florida](https://www.ncf.edu/)
-- [k.powell28@ncf.edu](mailto:k.powell28@ncf.edu)
+This project explores Olympic beach volleyball participation, international success, athlete characteristics, and historical trends. It follows the sport across the eight Olympic editions represented in the analysis, from Atlanta 1996 through Paris 2024, and presents patterns in participation, age, country performance, and medals.
+
+## Data Sources
+
+The original dataset is [`olympicAthletes::olympic_athletes`](https://moderndive.github.io/olympicAthletes/), a package dataset containing **315,094 Olympic athlete-event observations**. After filtering for Summer Games beach-volleyball events, the project uses **756 athlete-event records**.
+
+The filtered observations cover **1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024**. Relevant variables include athlete ID, name, sex, age, height, weight, team, NOC, Games, year, season, city, sport, event, and medal status.
+
+For 1996–2016, medals come from the athlete dataset. The project also uses [official Tokyo 2020 beach volleyball results](https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball) and [official Paris 2024 beach volleyball results](https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball) to add team-medal results for those editions.
+
+## Methodology
+
+The data was cleaned and filtered in R by retaining Summer Games records for the Volleyball sport and matching beach-volleyball event names. Where useful, team identifiers were standardized to country labels, missing or unavailable values were left unassigned, and selected visualizations were summarized by year, country, sex, or athlete characteristics.
+
+The project distinguishes three units of analysis:
+
+::: {.about-note-grid}
+::: {.about-note-card}
+### Athlete-event records
+
+Each row represents an athlete in a particular Games and event. An athlete who competed at more than one Olympics appears in more than one row.
 :::
 
-## Data and methods
+::: {.about-note-card}
+### Unique athletes
 
-### Dataset and sources
+Unique-athlete counts use source athlete IDs. This number does not equal participation totals because one athlete may have records from multiple Olympic editions.
+:::
 
-The primary source is [`olympicAthletes::olympic_athletes`](https://moderndive.github.io/olympicAthletes/), a dataset of **315,094 Olympic athlete-event records**. Filtering to Summer Games Volleyball events identified as beach volleyball gives **756 beach-volleyball athlete-event records**, covering eight editions: **1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024**.
+::: {.about-note-card}
+### Team medals
 
-The package documents historical sources including the [Olympic history dataset](https://github.com/rgriff23/Olympic_history) and [Olympedia](https://www.olympedia.org/). For recent podiums, I use the [official Tokyo 2020 results](https://olympics.com/en/olympic-games/tokyo-2020/results/volleyball/beach-volleyball) and [official Paris 2024 results](https://olympics.com/en/olympic-games/paris-2024/results/volleyball/beach-volleyball).
+Medal totals count one medal-winning team per Games, event, and medal. The two athletes on a pair are not counted as two separate medals.
+:::
+:::
 
-### Methodology
+Indoor volleyball is included in the homepage comparison because it provides historical context for age patterns across both volleyball disciplines. The comparison is based on Summer Olympic Volleyball records rather than on beach volleyball alone.
 
-I use **R** to load and prepare the data: filter to Summer Games, Volleyball, and beach-volleyball events; count participation as athlete-event rows; and standardize country labels from team identifiers for country-level comparisons. For medal analysis, I count each country-team's result once per Games, event, and medal rather than counting both athletes on a pair as separate medals. Because medal labels are unavailable in the package for 2020 and 2024, I add those podiums from the official results above.
+## Limitations
 
-I build the visualizations with **ggplot2**, **Plotly**, and **Leaflet**, and use **Quarto** to render the interactive website.
+Some records have missing data, including athlete characteristics such as height. In addition, 171 of the 192 source beach-volleyball records from 2020 and 2024 lack a country that can be derived from the team field, so the country participation map is limited to 1996–2016. Missing identifiers are not replaced through inference.
 
-## Data limitations
+Historical patterns show associations and changes over time, but they do not establish causation. Differences among Games, athletes, countries, data coverage, and Olympic rules should be considered when interpreting trends.
 
-An athlete-event row is not a unique person: athletes who compete in multiple Games appear in multiple rows. The source also has incomplete country/team identifiers for recent editions: **171 of its 192 beach-volleyball records from 2020 and 2024 lack a country derived from the team field**. For that reason, the country participation map is limited to 1996–2016 rather than assigning countries to records with missing identifiers. The 2020 and 2024 podiums are included only where official results support team-medal counts. Some athlete characteristics, including height, are also missing for a portion of records.
+## Tools and Reproducibility
+
+The website is built with R, the `tidyverse` and `ggplot2`, `plotly`, `crosstalk`, and `leaflet`. Quarto renders the pages and their analyses, and GitHub hosts the source project.
+
+::: {.about-links}
+- [View the project repository on GitHub](https://github.com/kaitlinpowell17/olympic-beach-volleyball)
+:::
+
+</div>

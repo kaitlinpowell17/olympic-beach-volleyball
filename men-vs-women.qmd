@@ -6,37 +6,116 @@ title: "Men vs Women"
 #| include: false
 source("R/data-prep.R")
 
-athlete_profiles <- beach_athletes |>
-  filter(!is.na(age), !is.na(height)) |>
+beach_athlete_age_records <- beach_athletes |>
+  filter(!is.na(age)) |>
   mutate(
     medal_status = case_when(
-      year >= 2020 ~ "Not reported in source",
+      is.na(medal) & year >= 2020 ~ "Not reported in source",
       is.na(medal) ~ "No medal",
       TRUE ~ as.character(medal)
     ),
     hover_text = paste0(
       "<b>", name, "</b>",
-      "<br>Year: ", year,
-      "<br>Event: ", gender,
-      "<br>Age: ", age,
+      "<br>Country: ", country, " (NOC: ", noc, ")",
+      "<br>Olympic year: ", year,
+      "<br>Event: ", gender, " beach volleyball",
+      "<br>Age: ", age, " years",
+      "<br>Medal status: ", medal_status
+    )
+  )
+
+athlete_profiles <- beach_athlete_age_records |>
+  filter(!is.na(height)) |>
+  mutate(
+    hover_text = paste0(
+      "<b>", name, "</b>",
+      "<br>Country: ", country, " (NOC: ", noc, ")",
+      "<br>Olympic year: ", year,
+      "<br>Event: ", gender, " beach volleyball",
+      "<br>Age: ", age, " years",
       "<br>Height: ", height, " cm",
       "<br>Medal status: ", medal_status
     )
   )
+
+men_age_median <- median(
+  beach_athlete_age_records$age[beach_athlete_age_records$gender == "Men"]
+)
+women_age_median <- median(
+  beach_athlete_age_records$age[beach_athlete_age_records$gender == "Women"]
+)
+men_height_count <- sum(athlete_profiles$gender == "Men")
+women_height_count <- sum(athlete_profiles$gender == "Women")
+men_missing_height_count <- sum(
+  is.na(beach_athletes$height) & beach_athletes$gender == "Men"
+)
+women_missing_height_count <- sum(
+  is.na(beach_athletes$height) & beach_athletes$gender == "Women"
+)
+men_team_medals <- sum(beach_medals$gender == "Men")
+women_team_medals <- sum(beach_medals$gender == "Women")
 ```
 
-## Two events, one Olympic stage
+## Participation matched after 2000; age and podiums show smaller differences
 
-Beach volleyball has featured men's and women's tournaments at every Games since its 1996 debut. Participation is measured in athlete-event records—two records for each competing pair—while podium results count each country-team once.
+Since 2000, the men's and women's events each have 48 athlete-event records at every Games; in 1996, the women's event had 36 compared with 48 for men. Across all editions, the median recorded age is **`r men_age_median`** for men and **`r women_age_median`** for women. Each event has earned 24 team medals.
 
-### Individual athlete profiles
+An athlete-event record is one person's participation in one Games and event, not a unique athlete. The **`r nrow(beach_athlete_age_records)`** age records represent **`r dplyr::n_distinct(beach_athlete_age_records$id)`** distinct source IDs; returning athletes appear in more than one record.
 
-Each point is a beach-volleyball athlete-event record. The age-height relationship is compared by event; shapes show medals only where the source records them.
+### Age distributions across the two events
+
+The distributions overlap substantially. The median age is **`r men_age_median`** in the men's event and **`r women_age_median`** in the women's event; each dot is one real source record.
 
 ```{r}
 #| echo: false
 #| fig-height: 6
-#| fig-cap: "Source: olympicAthletes::olympic_athletes. Shows `r scales::comma(nrow(athlete_profiles))` of `r scales::comma(nrow(beach_athletes))` athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024."
+#| fig-cap: "One point per beach-volleyball athlete-event record with reported age. Source: olympicAthletes::olympic_athletes."
+
+age_distribution_chart <- ggplot(
+  beach_athlete_age_records,
+  aes(
+    x = gender,
+    y = age,
+    color = gender,
+    text = hover_text
+  )
+) +
+  geom_point(
+    position = position_jitter(width = 0.22, height = 0, seed = 2024),
+    alpha = 0.35,
+    size = 1.9
+  ) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  labs(
+    title = "Age distributions overlap across the men's and women's events",
+    x = "Event",
+    y = "Age (years)",
+    color = "Event"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.title = element_text(color = "#355260"),
+    plot.title = element_text(color = "#10384a", face = "bold")
+  )
+
+plotly::ggplotly(age_distribution_chart, tooltip = "text")
+```
+
+::: {.source-note}
+**Observation count:** **`r nrow(beach_athlete_age_records)`** age-reported athlete-event records and the same number of plotted points; **`r dplyr::n_distinct(beach_athlete_age_records$id)`** distinct source IDs. All beach-volleyball records in this source have an age.
+:::
+
+### Individual athlete profiles
+
+This height-versus-age view retains the existing individual profiles. Points are colored by event and shaped by medal status where the source reports it.
+
+```{r}
+#| echo: false
+#| fig-height: 6
+#| fig-cap: !expr 'paste0("Source: olympicAthletes::olympic_athletes. Shows ", scales::comma(nrow(athlete_profiles)), " of ", scales::comma(nrow(beach_athletes)), " athlete-event records with reported height; medal status is unavailable in the source for 2020 and 2024.")'
 
 profile_chart <- ggplot(
   athlete_profiles,
@@ -76,7 +155,53 @@ plotly::ggplotly(profile_chart, tooltip = "text")
 ```
 
 ::: {.source-note}
-Source: `olympicAthletes::olympic_athletes`. The chart plots **`r scales::comma(nrow(athlete_profiles))`** of **`r scales::comma(nrow(beach_athletes))`** athlete-event records with reported height; records without height are omitted. Medal status is not reported by this source for 2020 or 2024.
+**Observation count:** **`r nrow(athlete_profiles)`** of **`r nrow(beach_athletes)`** athlete-event records have reported age and height and are plotted; **`r nrow(beach_athletes) - nrow(athlete_profiles)`** lack height. Medal status is not reported by this source for 2020 or 2024.
+:::
+
+### Height distributions
+
+Height is reported for **`r nrow(athlete_profiles)`** of **`r nrow(beach_athletes)`** athlete-event records. That is enough for a descriptive comparison, but missing heights are noted rather than assumed to match the observed records.
+
+```{r}
+#| echo: false
+#| fig-height: 5
+#| fig-cap: "One point per beach-volleyball athlete-event record with reported height. Heights are in centimeters; source: olympicAthletes::olympic_athletes."
+
+height_distribution_chart <- ggplot(
+  athlete_profiles,
+  aes(
+    x = gender,
+    y = height,
+    color = gender,
+    text = hover_text
+  )
+) +
+  geom_point(
+    position = position_jitter(width = 0.18, height = 0, seed = 2024),
+    alpha = 0.4,
+    size = 2
+  ) +
+  scale_color_manual(values = c(Men = "#147f91", Women = "#c99837")) +
+  labs(
+    title = "Recorded heights differ between the events",
+    x = "Event",
+    y = "Height (cm)",
+    color = "Event"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.title = element_text(color = "#355260"),
+    plot.title = element_text(color = "#10384a", face = "bold")
+  )
+
+plotly::ggplotly(height_distribution_chart, tooltip = "text")
+```
+
+::: {.source-note}
+**Observation count:** **`r nrow(athlete_profiles)`** reported heights are plotted: **`r men_height_count`** men's and **`r women_height_count`** women's records. Height is missing for **`r nrow(beach_athletes) - nrow(athlete_profiles)`** records (**`r men_missing_height_count`** men and **`r women_missing_height_count`** women). Median recorded height is **`r median(athlete_profiles$height[athlete_profiles$gender == "Men"])` cm** for men and **`r median(athlete_profiles$height[athlete_profiles$gender == "Women"])` cm** for women.
 :::
 
 ### Participation through the years
@@ -84,11 +209,21 @@ Source: `olympicAthletes::olympic_athletes`. The chart plots **`r scales::comma(
 ```{r}
 #| echo: false
 #| fig-height: 5
-#| fig-cap: "Beach volleyball participation by event and Games year. Source: olympicAthletes::olympic_athletes; 756 athlete-event records across eight editions."
+#| fig-cap: "Athlete-event participation by event and Olympic year. Source: olympicAthletes::olympic_athletes."
 
-ggplot(
+participation_chart <- ggplot(
   beach_participation_by_year,
-  aes(x = year, y = athlete_event_records, color = gender, group = gender)
+  aes(
+    x = year,
+    y = athlete_event_records,
+    color = gender,
+    group = gender,
+    text = paste0(
+      gender,
+      " event<br>Olympic year: ", year,
+      "<br>Athlete-event records: ", athlete_event_records
+    )
+  )
 ) +
   geom_line(linewidth = 1.1) +
   geom_point(size = 2.4) +
@@ -96,7 +231,8 @@ ggplot(
   scale_x_continuous(breaks = sort(unique(beach_participation_by_year$year))) +
   scale_y_continuous(labels = scales::label_comma()) +
   labs(
-    x = NULL,
+    title = "Participation entries match at every Games since 2000",
+    x = "Olympic year",
     y = "Athlete-event records",
     color = "Event",
     caption = "Source: olympicAthletes::olympic_athletes; beach volleyball identified from the event field."
@@ -108,9 +244,13 @@ ggplot(
     panel.grid.major.x = element_blank(),
     plot.caption = element_text(color = "#637780", hjust = 0)
   )
+
+plotly::ggplotly(participation_chart, tooltip = "text")
 ```
 
-Recorded participation begins lower for women at the sport's debut: 36 athlete-event rows versus 48 for men in 1996. From 2000 through 2024, both events have 48 rows per Games in this dataset; these are athlete-event counts, not audience or popularity measures.
+::: {.source-note}
+**Observation count:** **`r nrow(beach_athletes)`** athlete-event records are aggregated to **`r nrow(beach_participation_by_year)`** year-by-event points (eight editions and two events). These counts measure listed participation, not audience or popularity.
+:::
 
 ### Who reached the podium?
 
@@ -164,4 +304,4 @@ plotly::ggplotly(gender_medal_chart, tooltip = "text")
 Sources: `olympicAthletes` for 1996–2016; official Olympic results for Tokyo 2020 and Paris 2024. The plot shows all **`r scales::comma(nrow(beach_medals))`** country-team medal results once each, not once per athlete.
 :::
 
-Across eight editions, each event awards 24 team medals. Brazil leads both tallies (8 women's and 6 men's medals), while the United States has 7 women's and 4 men's; Australia's three medals are all in the women's event.
+**Observation count:** **`r nrow(beach_medals)`** medal-winning country-teams produce **`r nrow(beach_medals)`** points, **`r men_team_medals`** per event. Brazil leads both tallies (8 women's and 6 men's medals), while the United States has 7 women's and 4 men's; Australia's three medals are all in the women's event. These are team results, not individual athlete medals.
